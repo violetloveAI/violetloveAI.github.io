@@ -165,12 +165,12 @@
 }
 .gameCarousel { --frame-rotate: -.7deg; left: 8px; }
 .awardCarousel { --frame-rotate: .7deg; right: 8px; }
-.carouselImage { position: relative; display: block; width: 100%; height: 100%; overflow: hidden; border: 2px solid var(--ink); border-radius: 17px 21px 16px 19px; background: #08121c; animation: carousel-in 300ms var(--ease) both; }
+.carouselImage { position: relative; display: block; width: 100%; height: auto; aspect-ratio: var(--media-ratio, 16 / 9); overflow: hidden; border: 2px solid var(--ink); border-radius: 17px 21px 16px 19px; background: #08121c; animation: carousel-in 300ms var(--ease) both; }
 .carouselImage img { object-fit: contain; object-position: center; }
-.carouselCaption { position: absolute; right: 14px; bottom: 6px; left: 14px; display: grid; height: 44px; grid-template-columns: auto 1fr auto; align-items: center; gap: 9px; }
+.carouselCaption { position: absolute; right: 14px; bottom: 6px; left: 14px; display: grid; height: 44px; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 9px; }
 .carouselCaption i { color: var(--blue-deep); font-family: var(--font-geist-mono), monospace; font-size: 8px; font-style: normal; font-weight: 900; letter-spacing: .06em; white-space: nowrap; }
 .carouselCaption strong { overflow: hidden; font-family: var(--font-editorial), 'PingFang SC', sans-serif; font-size: 10px; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
-.carouselCaption small { color: rgba(23,51,46,.65); font-family: var(--font-geist-mono), monospace; font-size: 7px; font-weight: 800; white-space: nowrap; }
+.carouselCaption small { position: relative; display: inline-flex; min-height: 32px; align-items: center; justify-content: center; padding: 5px 10px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--yellow); color: var(--ink); font-family: var(--font-geist-mono), 'PingFang SC', sans-serif; font-size: 12px; font-weight: 900; letter-spacing: .01em; white-space: nowrap; box-shadow: inset 2px 2px 3px rgba(255,255,255,.4), 3px 4px 0 rgba(23,51,46,.28); animation: switch-hint 2.2s var(--ease) infinite; transition: background-color 180ms ease, transform 180ms var(--ease), box-shadow 180ms var(--ease); }
 
 .footer > p { margin: 0; color: rgba(244,237,221,.5); text-align: center; }
 .footerLinks { display: flex; justify-self: end; }
@@ -195,11 +195,13 @@
   .railTabs button:not([aria-selected='true']):hover { background: #a7c1df; transform: translateY(-2px); }
   .stepTabs button:not([aria-selected='true']):hover { background: #a7c1df; transform: translateY(-2px); }
   .carouselFrame:hover { z-index: 7; box-shadow: inset 4px 5px 7px rgba(255,255,255,.5), inset -6px -7px 9px rgba(23,51,46,.14), 0 0 0 3px var(--yellow), 12px 16px 0 rgba(4,18,16,.52); transform: translateY(calc(-50% - 5px)) rotate(var(--frame-rotate)) scale(1.018); }
+  .carouselFrame:hover .carouselCaption small { background: var(--paper); box-shadow: inset 2px 2px 3px rgba(255,255,255,.48), 2px 3px 0 rgba(23,51,46,.32); transform: translateX(3px); }
 }
 
 @keyframes detail-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes carousel-in { from { opacity: .35; transform: scale(1.02); } to { opacity: 1; transform: scale(1); } }
 @keyframes rail-story-in { from { opacity: .25; transform: translateX(9px) scale(.99); } to { opacity: 1; transform: translateX(0) scale(1); } }
+@keyframes switch-hint { 0%, 100% { box-shadow: inset 2px 2px 3px rgba(255,255,255,.4), 3px 4px 0 rgba(23,51,46,.28), 0 0 0 0 rgba(244,188,77,.35); } 55% { box-shadow: inset 2px 2px 3px rgba(255,255,255,.4), 3px 4px 0 rgba(23,51,46,.28), 0 0 0 7px rgba(244,188,77,0); } }
 
 @media (min-width:981px) {
   .introCard { top: 3.5%; left: 0; width: min(27vw,345px); padding: 21px 22px; }
@@ -331,4 +333,129 @@
   .railTabs button,
   .stepTabs button,
   .progress button span { transition: none; }
+  .carouselCaption small { animation: none; }
+}
+
+/* Main-site embed mode: retain the evidence layout without a second page frame. */
+@media (min-width:981px) {
+  .page.embedded {
+    display: grid;
+    height: 100svh;
+    min-height: 0;
+    grid-template-rows: minmax(0,1fr);
+    padding: 0;
+    background:transparent;
+  }
+
+  .embedded::after,
+  .embedded .texture,
+  .embedded .topbar,
+  .embedded > .footer {
+    display:none;
+  }
+
+  .embedded .showcase {
+    width:100%;
+    max-width:none;
+    height:calc(100% - clamp(175px,18svh,225px));
+    margin:0;
+    padding:clamp(12px,1.35vw,26px) clamp(18px,2.4vw,46px);
+    overflow:visible;
+  }
+
+  .embedded .caseRail {
+    bottom:auto;
+    left:clamp(18px,2.4vw,46px);
+    grid-template-rows:auto auto auto auto;
+    align-content:start;
+    gap:7px;
+    padding:14px;
+  }
+
+  .embedded .railHeader h1 {
+    font-size:clamp(23px,2.05vw,32px);
+    line-height:.98;
+  }
+
+  .embedded .railHeader small {
+    display:none;
+  }
+
+  .embedded .railHeader > p {
+    margin:8px 0 5px;
+  }
+
+  .embedded .railTabs button {
+    min-height:50px;
+  }
+
+  .embedded .railStory {
+    padding:10px 12px;
+  }
+
+  .embedded .railStory h2 {
+    margin-top:7px;
+    font-size:clamp(15px,1.25vw,19px);
+    line-height:1.05;
+  }
+
+  .embedded .railStory > p {
+    display:-webkit-box;
+    margin-top:6px;
+    overflow:hidden;
+    font-size:9px;
+    line-height:1.35;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+  }
+
+  .embedded .railProof {
+    margin-top:7px;
+  }
+
+  .embedded .railEvidence {
+    padding:8px 10px;
+  }
+
+  .embedded .railEvidence > p {
+    display:none;
+  }
+
+  .embedded .stageLabel {
+    display:none;
+  }
+
+  .embedded .awardStage {
+    left:64%;
+    display:grid;
+    width:min(72vw,1120px);
+    grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);
+    align-items:center;
+  }
+
+  .embedded .gameCarousel,
+  .embedded .awardCarousel {
+    position:relative;
+    inset:auto;
+    width:100%;
+    height:auto;
+    transform:translateY(var(--frame-y)) rotate(var(--frame-rotate));
+  }
+
+  .embedded .gameCarousel {
+    --frame-y:-8%;
+    z-index:6;
+  }
+
+  .embedded .awardCarousel {
+    --frame-y:10%;
+    z-index:7;
+    margin-left:-12px;
+  }
+}
+
+@media (min-width:981px) and (hover:hover) and (pointer:fine) {
+  .embedded .carouselFrame:hover {
+    transform:translateY(calc(var(--frame-y) - 5px)) rotate(var(--frame-rotate)) scale(1.012);
+  }
 }

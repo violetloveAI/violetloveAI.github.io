@@ -216,16 +216,17 @@
 .phoneTop i { position: absolute; top: 9px; right: 18px; width: 7px; height: 7px; border-radius: 50%; background: #324b46; box-shadow: inset 1px 1px 2px #0b1815; }
 .phoneHome { position: absolute; z-index: 5; bottom: 22px; left: 50%; width: 110px; height: 5px; border-radius: 999px; background: rgba(20, 35, 32, .7); transform: translateX(-50%); pointer-events: none; }
 
-.liveToggle { position: absolute; z-index: 9; bottom: 9%; left: -14.5%; display: flex; min-width: 146px; min-height: 60px; align-items: center; justify-content: center; gap: 9px; padding: 0 8px 0 13px; border: 2px solid var(--clay-ink); border-radius: 25px 31px 24px 29px; background: var(--clay-yellow); color: var(--clay-ink); cursor: pointer; touch-action: manipulation; box-shadow: inset 3px 3px 4px rgba(255, 255, 255, .38), 6px 8px 0 rgba(8, 29, 25, .5); transform-origin: right center; transition: background-color 160ms ease, color 160ms ease, transform 160ms var(--clay-ease), box-shadow 160ms var(--clay-ease); }
-.liveToggle::before { position: absolute; z-index: -1; inset: -8px; border: 2px solid rgba(244, 188, 77, .74); border-radius: inherit; content: ''; opacity: 0; transform: scale(.95); pointer-events: none; animation: demo-pulse 2s var(--clay-ease-in-out) infinite; }
+.liveToggle { position: absolute; z-index: 9; bottom: 9%; left: -14.5%; display: flex; min-width: 184px; min-height: 66px; align-items: center; justify-content: center; gap: 8px; padding: 0 7px 0 10px; border: 2px solid var(--clay-ink); border-radius: 23px 28px 22px 26px; background: var(--clay-yellow); color: var(--clay-ink); cursor: pointer; touch-action: manipulation; box-shadow: inset 3px 3px 4px rgba(255, 255, 255, .38), 6px 8px 0 rgba(8, 29, 25, .5); transform-origin: right center; transition: background-color 160ms ease, color 160ms ease, transform 160ms var(--clay-ease), box-shadow 160ms var(--clay-ease); }
+.liveToggle::before { position: absolute; z-index: -1; inset: -11px; border: 3px solid rgba(244, 188, 77, .9); border-radius: inherit; box-shadow: 0 0 0 6px rgba(244, 188, 77, .24), 0 0 24px rgba(244, 188, 77, .54); content: ''; opacity: 0; transform: scale(.92); pointer-events: none; animation: demo-pulse 2.4s var(--clay-ease-in-out) infinite; }
 .liveToggle::after { position: absolute; z-index: -1; top: 50%; right: -13px; width: 20px; height: 25px; border: 2px solid var(--clay-ink); border-left: 0; border-radius: 0 999px 999px 0; background: var(--clay-yellow); content: ''; transform: translateY(-50%); pointer-events: none; }
-.liveToggle span { display: flex; min-width: 66px; flex-direction: column; align-items: flex-start; font-family: var(--font-geist-mono), monospace; white-space: nowrap; }
-.liveToggle small { font-size: 6px; font-weight: 750; letter-spacing: .11em; line-height: 1; opacity: .64; }
-.liveToggle strong { margin-top: 5px; font-size: 9px; font-weight: 900; letter-spacing: .06em; line-height: 1; }
-.liveToggle i { width: 11px; height: 11px; flex: 0 0 auto; border: 2px solid var(--clay-ink); border-radius: 50%; background: var(--clay-paper); box-shadow: 0 0 0 4px rgba(255, 250, 240, .28), inset 1px 1px 2px rgba(255, 255, 255, .65); }
-.liveToggle b { display: grid; width: 27px; height: 27px; flex: 0 0 auto; place-items: center; border: 1px solid var(--clay-ink); border-radius: 50%; background: var(--clay-ink); color: var(--clay-yellow); font-family: var(--font-geist-mono), monospace; font-size: 14px; line-height: 1; animation: demo-arrow 2s var(--clay-ease-in-out) infinite; }
+.liveToggle span { display: flex; min-width: 96px; flex-direction: column; align-items: flex-start; font-family: var(--font-geist-mono), 'PingFang SC', sans-serif; white-space: nowrap; }
+.liveToggle small { font-size: 14px; font-weight: 850; letter-spacing: .025em; line-height: 1; opacity: .86; }
+.liveToggle strong { margin-top: 7px; font-size: 20px; font-weight: 900; letter-spacing: .01em; line-height: 1; }
+.liveToggle i { width: 11px; height: 11px; flex: 0 0 auto; border: 2px solid var(--clay-ink); border-radius: 50%; background: var(--clay-paper); box-shadow: 0 0 0 4px rgba(255, 250, 240, .28), inset 1px 1px 2px rgba(255, 255, 255, .65); animation: demo-beacon 2.4s var(--clay-ease-in-out) infinite; }
+.liveToggle b { display: grid; width: 25px; height: 25px; flex: 0 0 auto; place-items: center; border: 1px solid var(--clay-ink); border-radius: 50%; background: var(--clay-ink); color: var(--clay-yellow); font-family: var(--font-geist-mono), monospace; font-size: 14px; line-height: 1; animation: demo-arrow 2.4s var(--clay-ease-in-out) infinite; }
 .liveToggle[aria-pressed='true'] { background: var(--clay-paper); }
 .liveToggle[aria-pressed='true']::before,
+.liveToggle[aria-pressed='true'] i,
 .liveToggle[aria-pressed='true'] b { animation: none; }
 .liveToggle[aria-pressed='true']::after { background: var(--clay-paper); }
 .liveToggle[aria-pressed='true'] i { background: var(--clay-mint); }
@@ -261,8 +262,9 @@
 @keyframes detail-in { from { opacity: 0; transform: translate3d(12px, 0, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
 @keyframes marker-in { from { opacity: 0; transform: translate3d(12px, -6px, 0) rotate(3deg); } to { opacity: 1; transform: translate3d(0, 0, 0) rotate(-1deg); } }
 @keyframes card-in { from { opacity: 0; transform: translate3d(-10px, 7px, 0) rotate(2deg); } to { opacity: 1; transform: translate3d(0, 0, 0) rotate(.7deg); } }
-@keyframes demo-pulse { 0%, 45%, 100% { opacity: 0; transform: scale(.95); } 70% { opacity: .72; transform: scale(1.08); } }
-@keyframes demo-arrow { 0%, 45%, 100% { transform: translateX(0); } 70% { transform: translateX(4px); } }
+@keyframes demo-pulse { 0%, 40%, 100% { opacity: 0; transform: scale(.92); } 54% { opacity: .88; transform: scale(1.02); } 72% { opacity: 0; transform: scale(1.16); } }
+@keyframes demo-beacon { 0%, 40%, 100% { opacity: .78; transform: scale(1); } 54% { opacity: 1; transform: scale(1.34); } 72% { opacity: .82; transform: scale(1); } }
+@keyframes demo-arrow { 0%, 40%, 100% { transform: translateX(0); } 54% { transform: translateX(6px); } 72% { transform: translateX(0); } }
 
 @media (min-height: 850px) and (min-width: 981px) {
   .productStage { --phone-scale: .79; }
@@ -350,12 +352,157 @@
   .productMarker,
   .storyDetail { animation: none; }
   .liveToggle::before,
+  .liveToggle i,
   .liveToggle b { animation: none; }
-  .liveToggle::before { opacity: .28; transform: none; }
+  .liveToggle::before { opacity: .48; transform: none; }
   .backLink,
   .topDemoLink,
   .footerLinks a,
   .liveToggle,
   .stepTabs button,
   .progress button span { transition: none; }
+}
+
+/* Main-site embed mode: the selected work owns the full colored stage. */
+@media (min-width: 981px) {
+  .page.embedded {
+    display: grid;
+    height: 100svh;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+    padding: 0;
+    background: transparent;
+  }
+
+  .embedded::after,
+  .embedded .texture,
+  .embedded .topbar,
+  .embedded > .footer {
+    display: none;
+  }
+
+  .embedded .showcase {
+    width: 100%;
+    max-width: none;
+    height: calc(100% - clamp(175px, 18svh, 225px));
+    margin: 0;
+    padding: clamp(12px, 1.35vw, 26px) clamp(18px, 2.4vw, 46px);
+    overflow: visible;
+  }
+
+  .embedded .stageLabel {
+    display: none;
+  }
+
+  .embedded .introCard {
+    top: 2.5%;
+    left: 2.2%;
+    width: min(29vw, 405px);
+    padding: 18px 20px;
+  }
+
+  .embedded .introCard h1 {
+    font-size: clamp(25px, 2.2vw, 34px);
+    line-height: .96;
+  }
+
+  .embedded .kicker {
+    margin: 12px 0 7px;
+  }
+
+  .embedded .summary {
+    display: none;
+  }
+
+  .embedded .featureShot {
+    bottom: 2.5%;
+    left: 2.8%;
+    width: min(28vw, 390px);
+    height: 31%;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr) 92px;
+    grid-template-rows: minmax(0, 1fr);
+    padding: 12px;
+  }
+
+  .embedded .shotViewport {
+    width: 92px;
+    min-height: 0;
+  }
+
+  .embedded .shotCopy p,
+  .embedded .featureShot figcaption {
+    display: none;
+  }
+
+  .embedded .resultsCard {
+    top: 2.5%;
+    right: 2.2%;
+    width: min(28vw, 390px);
+    padding: 15px 17px;
+  }
+
+  .embedded .resultsCard h2 {
+    margin: 8px 0 10px;
+    font-size: clamp(21px, 1.8vw, 28px);
+  }
+
+  .embedded .storyPanel {
+    right: 2.2%;
+    bottom: 2.5%;
+    width: min(31vw, 430px);
+    height: auto;
+    min-height: 168px;
+    max-height: 32%;
+    overflow: hidden;
+    padding: 11px 13px;
+  }
+
+  .embedded .storyPanel .productMarker {
+    top: auto;
+    right: 14px;
+    bottom: 14px;
+    width: 46px;
+    height: 46px;
+    pointer-events: none;
+  }
+
+  .embedded .storyPanel .productMarker span {
+    font-size: 21px;
+  }
+
+  .embedded .stepTabs button {
+    min-height: 46px;
+  }
+
+  .embedded .storyDetail {
+    padding-top: 9px;
+  }
+
+  .embedded .storyDetail h2 {
+    margin-top: 5px;
+    font-size: clamp(16px, 1.35vw, 21px);
+  }
+
+  .embedded .storyDetail > p {
+    margin-top: 5px;
+    font-size: 9px;
+    line-height: 1.38;
+  }
+
+  .embedded .proofList {
+    display: none;
+  }
+
+  .embedded .productStage {
+    --phone-scale: .69;
+    top: 50%;
+  }
+
+  .embedded .liveToggle {
+    z-index: 2;
+    top: 14%;
+    left: -24%;
+    bottom: auto;
+  }
 }

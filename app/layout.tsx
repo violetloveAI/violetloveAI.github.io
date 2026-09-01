@@ -53,22 +53,22 @@ const rockSalt = Rock_Salt({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://violetloveai.github.io'),
-  title: 'Violet Xie · AI Solutions / FDE',
-  description: '谢子涵（Violet Xie）的 AI 解决方案与 FDE 作品集。',
+  title: '谢子涵 Violet Xie · FDE 作品集',
+  description: '从企业软件交付现场出发，把模糊业务问题推进为可验证 AI 方案的 FDE 作品集。',
   icons: {
     icon: [{ url: '/favicon.png', type: 'image/png', sizes: '512x512' }],
     shortcut: '/favicon.ico',
     apple: '/favicon.png',
   },
   openGraph: {
-    title: 'Violet Xie · AI Solutions / FDE',
-    description: '把复杂业务现场，变成可验证的 AI 系统。',
+    title: '谢子涵 Violet Xie · FDE 作品集',
+    description: '把模糊业务问题推进为可验证的 AI 方案。',
     images: [{ url: '/og.png', width: 1200, height: 630, alt: '谢子涵 Violet Xie · AI Solutions / FDE' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Violet Xie · AI Solutions / FDE',
-    description: '把复杂业务现场，变成可验证的 AI 系统。',
+    title: '谢子涵 Violet Xie · FDE 作品集',
+    description: '把模糊业务问题推进为可验证的 AI 方案。',
     images: ['/og.png'],
   },
 };

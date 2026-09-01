@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import { useState, type KeyboardEvent } from 'react';
+import { CaseCursor } from '../_components/CaseCursor';
+import { useEmbeddedMode } from '../_components/useEmbeddedMode';
 import styles from './tutor-log.module.css';
 
 const demoUrl = 'https://violetloveai.github.io/yang-teacher-tutor/';
@@ -11,9 +13,9 @@ const storySteps = [
     index: '01',
     label: '匿名用户',
     english: 'DISCOVER',
-    title: '不是做给“家教行业”，而是做给一位具体的独立教师。',
-    body: '我从匿名化的一天开始理解问题：课表分散、临时调课难追踪、学生情况靠记忆，月底再重新核对收入与通勤。',
-    proof: ['匿名使用者场景', '访谈与反馈', '私人数据与公开 Demo 隔离'],
+    title: '为一位具体的独立教师构建，从匿名日常开始。',
+    body: '我从脱敏的一天开始理解问题：课表分散、临时调课难追踪、学生情况靠记忆，月底再重新核对收入与通勤。',
+    proof: ['匿名使用者场景', '私人版已交付', '私人数据与公开 Demo 隔离'],
     marker: 'ANONYMIZED USER / DAILY WORK',
     screenshot: '/projects/tutor-log/calendar-month.png',
     screenshotAlt: 'Tutor Log 月历与当天课程界面',
@@ -37,7 +39,7 @@ const storySteps = [
     index: '03',
     label: '关键取舍',
     english: 'DECIDE',
-    title: '真正重要的不是功能多，而是数据可信、使用安心。',
+    title: '数据可信、使用安心，比堆叠功能更重要。',
     body: '产品坚持离线优先；报价、通勤成本与真实时薪放在同一套统计中；备份使用密码加密，公开预览只保留虚构数据。',
     proof: ['离线优先', '真实时薪与收款统计', 'AES-GCM 加密备份'],
     marker: 'PRIVATE BY DEFAULT',
@@ -50,9 +52,9 @@ const storySteps = [
     index: '04',
     label: '我的角色',
     english: 'DELIVER',
-    title: '我负责的不是一张界面，而是从模糊需求到可以交付的产品。',
-    body: '我参与需求澄清、范围定义、交互与视觉、AI 辅助开发、测试、隐私边界和发布准备，并持续根据真实使用反馈迭代。',
-    proof: ['0→1 全程参与', '产品与体验决策', 'iOS 交付 · App Store Next'],
+    title: '我独立把模糊需求推进成可以交付的产品。',
+    body: '我负责需求澄清、范围、交互与视觉、AI 辅助开发、测试、隐私边界和交付；公开版仍在上架准备中。',
+    proof: ['独立 0→1', '私人版已交付使用', '公开版筹备中'],
     marker: 'OWNER / BUILDER / ITERATOR',
     screenshot: '/projects/tutor-log/student-detail.png',
     screenshotAlt: 'Tutor Log 学生档案与学习轨迹界面',
@@ -61,7 +63,8 @@ const storySteps = [
   },
 ] as const;
 
-export function TutorLogCase() {
+export function TutorLogCase({ embedded = false }: { embedded?: boolean }) {
+  const isEmbedded = useEmbeddedMode(embedded);
   const [activeStep, setActiveStep] = useState(0);
   const [liveDemo, setLiveDemo] = useState(false);
   const selectedStep = storySteps[activeStep];
@@ -76,7 +79,8 @@ export function TutorLogCase() {
   };
 
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${isEmbedded ? styles.embedded : ''}`} data-cursor-theme="clay">
+      <CaseCursor embedded={isEmbedded} />
       <div className={styles.texture} aria-hidden="true" />
       <header className={styles.topbar}>
         {/* vinext's production Link prefetch currently throws on hash navigation. */}
@@ -86,7 +90,7 @@ export function TutorLogCase() {
         </a>
         <div className={styles.identity}>
           <span>VIOLET XIE / PERSONAL WEBSITE</span>
-            <span>01 / ANONYMIZED USER CASE</span>
+          <span>04 / ANONYMIZED USER CASE</span>
         </div>
         <a className={styles.topDemoLink} href={demoUrl} target="_blank" rel="noreferrer">
           OPEN DEMO <span aria-hidden="true">↗</span>
@@ -104,16 +108,16 @@ export function TutorLogCase() {
         <article className={styles.introCard}>
           <div className={styles.statusLine}>
             <span>ANONYMIZED CASE</span>
-            <span>DELIVERED / ITERATING</span>
+            <span>PRIVATE VERSION DELIVERED</span>
           </div>
-          <p className={styles.kicker}>01 / VIBE CODING WORKS · TUTOR LOG</p>
+          <p className={styles.kicker}>04 / AI-ASSISTED BUILD · TUTOR LOG</p>
           <h1 id="case-title">
             把独立教师的
             <em>课表、学生和工资，</em>
-            装进一部真正会被使用的 App。
+            装进一部每天会用的 App。
           </h1>
           <p className={styles.summary}>
-            从匿名使用场景出发的 iPhone 家教工作台。我参与访谈、定义、设计、构建、测试与交付的完整过程。
+            从匿名使用场景出发的 iPhone 家教工作台，由我独立完成并交付私人版。
           </p>
         </article>
 
@@ -150,6 +154,8 @@ export function TutorLogCase() {
                     height="812"
                     title="家教计薪器正式版功能预览"
                     sandbox="allow-scripts allow-same-origin allow-forms"
+                    onPointerEnter={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: false }))}
+                    onPointerLeave={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: true }))}
                   />
                 ) : (
                   <Image
@@ -170,29 +176,29 @@ export function TutorLogCase() {
             className={styles.liveToggle}
             type="button"
             aria-pressed={liveDemo}
-            aria-label={liveDemo ? '返回关键产品画面' : '切换为实时 Demo'}
+            aria-label={liveDemo ? '点击返回关键产品画面' : '点击查看在线 Demo'}
             onClick={() => setLiveDemo((current) => !current)}
           >
             <i aria-hidden="true" />
             <span>
-              <small>{liveDemo ? 'RETURN TO' : 'CLICK TO TRY'}</small>
-              <strong>{liveDemo ? 'KEY VIEW' : 'LIVE DEMO'}</strong>
+              <small>{liveDemo ? '点击返回' : '点击查看'}</small>
+              <strong>{liveDemo ? '关键画面' : '在线 DEMO'}</strong>
             </span>
             <b aria-hidden="true">{liveDemo ? '←' : '→'}</b>
           </button>
-          <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true">
+          {!isEmbedded && <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true">
             <span>{selectedStep.index}</span>
-          </div>
+          </div>}
         </div>
 
         <article className={styles.resultsCard}>
           <span>OUTCOME / 结果</span>
-          <h2>不是概念图，<strong>是可验证交付。</strong></h2>
+          <h2>私人版已交付，<strong>公开版在筹备。</strong></h2>
           <dl className={styles.metrics} aria-label="项目成果">
             <div><dt>USER</dt><dd>匿名教师场景</dd></div>
-            <div><dt>SCOPE</dt><dd>0→1 全流程</dd></div>
-            <div><dt>DELIVERY</dt><dd>iPhone 已上架</dd></div>
-            <div><dt>NEXT</dt><dd>App Store 推广</dd></div>
+            <div><dt>SCOPE</dt><dd>独立 0→1</dd></div>
+            <div><dt>DELIVERY</dt><dd>私人版已使用</dd></div>
+            <div><dt>NEXT</dt><dd>公开版筹备中</dd></div>
           </dl>
         </article>
 
@@ -233,6 +239,9 @@ export function TutorLogCase() {
               ))}
             </div>
           </article>
+          {isEmbedded && <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true">
+            <span>{selectedStep.index}</span>
+          </div>}
         </aside>
       </section>
 

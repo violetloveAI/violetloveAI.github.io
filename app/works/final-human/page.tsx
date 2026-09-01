@@ -3,7 +3,7 @@ import { FinalHumanCase } from './FinalHumanCase';
 
 export const metadata: Metadata = {
   title: 'Final Human · AI 幻觉调查游戏 | Violet Xie',
-  description: 'AI Ping 特种兵黑客松双奖作品：游戏开发赛道亚军与跨赛道专项奖“极准·一发入魂”。',
+  description: '深圳特种兵黑客松两人团队作品：游戏赛道亚军与跨赛道“极准·一发入魂奖”。',
 };
 
 export default function FinalHumanPage() {

@@ -279,3 +279,49 @@
   .footer a,
   .cardFooter a { transition: none; }
 }
+
+/* Main-site embed mode: the lab cards sit directly on the selected green stage. */
+@media (min-width: 901px) {
+  .page.embedded {
+    display: grid;
+    height: 100svh;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+    padding: 0;
+    background: transparent;
+  }
+
+  .embedded::after,
+  .embedded .texture,
+  .embedded .topbar,
+  .embedded > .footer {
+    display: none;
+  }
+
+  .embedded .showcase {
+    width: 100%;
+    max-width: none;
+    height: calc(100% - clamp(175px, 18svh, 225px));
+    margin: 0;
+    padding: clamp(14px, 1.5vw, 28px) clamp(18px, 2.4vw, 46px);
+    overflow: visible;
+  }
+
+  .embedded .hero {
+    min-height: 102px;
+    padding: 13px 18px 14px;
+  }
+
+  .embedded .hero h1 {
+    margin-top: 5px;
+    font-size: clamp(31px, 3.35vw, 50px);
+  }
+
+  .embedded .heroTags {
+    display: none;
+  }
+
+  .embedded .heroNote p {
+    font-size: clamp(13px, 1.18vw, 17px);
+  }
+}

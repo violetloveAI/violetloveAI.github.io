@@ -213,6 +213,31 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--acid); outline-
   transform: translate3d(0, 0, 0) rotate(-2deg) scale(1);
 }
 
+[data-cursor-theme="clay"] :is(a[href], button:not(:disabled), [role="button"], [role="tab"]) {
+  scale: 1;
+  touch-action: manipulation;
+  transition-property: scale;
+  transition-duration: 160ms;
+  transition-timing-function: var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-cursor-theme="clay"] :is(a[href], button:not(:disabled), [role="button"], [role="tab"]):hover {
+    scale: 1.025;
+  }
+}
+
+[data-cursor-theme="clay"] :is(a[href], button:not(:disabled), [role="button"], [role="tab"]):active {
+  scale: .97;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-cursor-theme="clay"] :is(a[href], button:not(:disabled), [role="button"], [role="tab"]) {
+    scale: 1;
+    transition: none;
+  }
+}
+
 .liquid-hover-label { position: relative; display: inline-block; }
 .liquid-hover-label::before,
 .liquid-hover-label::after {

@@ -33,11 +33,12 @@ export function LiquidCursor() {
     const setInteractiveTarget = (eventTarget: EventTarget | null) => {
       const targetElement = eventTarget instanceof Element ? eventTarget : null;
       const interactive = eventTarget instanceof Element
-        ? eventTarget.closest<HTMLElement>('[data-cursor-label]')
+        ? eventTarget.closest<HTMLElement>('[data-cursor-label], a[href], button:not(:disabled), [role="button"], [role="tab"]')
         : null;
-      const cursorLabel = interactive?.dataset.cursorLabel ?? '';
+      const cursorLabel = interactive?.dataset.cursorLabel
+        ?? (interactive?.getAttribute('role') === 'tab' ? 'SWITCH / 切换' : interactive?.tagName === 'A' ? 'OPEN / 打开' : interactive ? 'CLICK / 点击' : '');
       const claySurface = targetElement?.closest(
-        '.nav-scene, .work-canvas-v2, .career-canvas-v2, .education-canvas, .life-canvas-v2, .contact-canvas-v2, .resume-modal-backdrop',
+        '[data-cursor-theme="clay"], .nav-scene, .work-canvas-v2, .career-canvas-v2, .education-canvas, .life-canvas-v2, .contact-canvas-v2, .resume-modal-backdrop',
       );
       const liquidSurface = targetElement?.closest('.opening-prompt, .hero-scene, .bio-scene');
 
@@ -51,6 +52,7 @@ export function LiquidCursor() {
       target.x = event.clientX;
       target.y = event.clientY;
       setInteractiveTarget(event.target);
+      cursor.dataset.visible = 'true';
 
       if (!hasMoved) {
         lead.x = trailA.x = trailB.x = target.x;
@@ -65,6 +67,10 @@ export function LiquidCursor() {
     const handlePointerLeave = () => { cursor.dataset.visible = 'false'; };
     const handlePointerEnter = () => {
       if (hasMoved) cursor.dataset.visible = 'true';
+    };
+    const handleExternalVisibility = (event: Event) => {
+      const visible = event instanceof CustomEvent ? event.detail !== false : true;
+      cursor.dataset.visible = visible ? 'true' : 'false';
     };
 
     const render = (now: number) => {
@@ -95,6 +101,7 @@ export function LiquidCursor() {
     window.addEventListener('pointerup', handlePointerUp, { passive: true });
     document.documentElement.addEventListener('mouseleave', handlePointerLeave);
     document.documentElement.addEventListener('mouseenter', handlePointerEnter);
+    window.addEventListener('violet-cursor-visibility', handleExternalVisibility);
     animationFrame = requestAnimationFrame(render);
 
     return () => {
@@ -104,6 +111,7 @@ export function LiquidCursor() {
       window.removeEventListener('pointerup', handlePointerUp);
       document.documentElement.removeEventListener('mouseleave', handlePointerLeave);
       document.documentElement.removeEventListener('mouseenter', handlePointerEnter);
+      window.removeEventListener('violet-cursor-visibility', handleExternalVisibility);
       cancelAnimationFrame(animationFrame);
     };
   }, []);

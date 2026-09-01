@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
-import Link from 'next/link';
+import { CaseCursor } from '../_components/CaseCursor';
+import { useEmbeddedMode } from '../_components/useEmbeddedMode';
 import styles from './other-builds.module.css';
 
 const builds = [
@@ -60,13 +63,18 @@ function ExternalArrow() {
   return <span aria-hidden="true">↗</span>;
 }
 
-export default function OtherBuildsCase() {
+export default function OtherBuildsCase({ embedded = false }: { embedded?: boolean }) {
+  const isEmbedded = useEmbeddedMode(embedded);
+
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${isEmbedded ? styles.embedded : ''}`} data-cursor-theme="clay">
+      <CaseCursor embedded={isEmbedded} />
       <div className={styles.texture} aria-hidden="true" />
 
       <header className={styles.topbar}>
-        <Link className={styles.backLink} href="/#work"><span aria-hidden="true">←</span> WORKS</Link>
+        {/* vinext production prefetch currently throws on hash navigation. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a className={styles.backLink} href="/#work"><span aria-hidden="true">←</span> WORKS</a>
         <div className={styles.identity}><span>VIOLET XIE / PERSONAL WEBSITE</span><span>06 / OTHER BUILDS</span></div>
         <span className={styles.status}><i aria-hidden="true" /> LAB IS GROWING</span>
       </header>

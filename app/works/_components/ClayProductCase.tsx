@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState, type CSSProperties, type KeyboardEvent } from 'react';
+import { CaseCursor } from './CaseCursor';
 import styles from './clay-product-case.module.css';
 
 export type ProductStoryStep = {
@@ -44,6 +45,7 @@ export type ClayProductCaseProps = {
   githubUrl: string;
   clayArt: string;
   deviceMode: 'phone' | 'dual';
+  phoneLayout?: 'default' | 'three-panel';
   showcaseDesktop?: string;
   showcaseDesktopAlt?: string;
   showcasePhone?: string;
@@ -52,12 +54,19 @@ export type ClayProductCaseProps = {
   accent: string;
   accentDeep: string;
   accentSoft: string;
+  canvasLight: string;
+  canvas: string;
+  canvasDeep: string;
+  embedded?: boolean;
 };
 
 type CaseVars = CSSProperties & {
   '--case-accent': string;
   '--case-accent-deep': string;
   '--case-accent-soft': string;
+  '--case-canvas-light': string;
+  '--case-canvas': string;
+  '--case-canvas-deep': string;
 };
 
 function ExternalArrow() {
@@ -83,6 +92,7 @@ export function ClayProductCase({
   githubUrl,
   clayArt,
   deviceMode,
+  phoneLayout = 'default',
   showcaseDesktop,
   showcaseDesktopAlt,
   showcasePhone,
@@ -91,6 +101,10 @@ export function ClayProductCase({
   accent,
   accentDeep,
   accentSoft,
+  canvasLight,
+  canvas,
+  canvasDeep,
+  embedded = false,
 }: ClayProductCaseProps) {
   const [activeStep, setActiveStep] = useState(0);
   const [liveDemo, setLiveDemo] = useState(false);
@@ -104,6 +118,9 @@ export function ClayProductCase({
     '--case-accent': accent,
     '--case-accent-deep': accentDeep,
     '--case-accent-soft': accentSoft,
+    '--case-canvas-light': canvasLight,
+    '--case-canvas': canvas,
+    '--case-canvas-deep': canvasDeep,
   };
 
   const handleStepKeys = (event: KeyboardEvent<HTMLButtonElement>, current: number) => {
@@ -118,7 +135,8 @@ export function ClayProductCase({
   const deviceCopy = deviceMode === 'dual' ? '1280 × 720 + 390 × 844' : '390 × 844 / MOBILE PRODUCT VIEW';
 
   return (
-    <main className={`${styles.page} ${deviceMode === 'dual' ? styles.dualPage : ''}`} style={caseVars}>
+    <main className={`${styles.page} ${deviceMode === 'dual' ? styles.dualPage : ''} ${phoneLayout === 'three-panel' ? styles.threePanel : ''} ${embedded ? styles.embedded : ''}`} style={caseVars} data-cursor-theme="clay">
+      <CaseCursor embedded={embedded} />
       <div className={styles.texture} aria-hidden="true" />
       <header className={styles.topbar}>
         {/* vinext production prefetch currently throws on hash navigation. */}
@@ -184,7 +202,7 @@ export function ClayProductCase({
           <>
             <article className={styles.introCard}>
               <div className={styles.statusLine}><span>{status[0]}</span><span>{status[1]}</span></div>
-              <p className={styles.kicker}>{index} / VIBE CODING WORKS · {englishName}</p>
+              <p className={styles.kicker}>{index} / AI-ASSISTED BUILD · {englishName}</p>
               <h1 id={`${name}-title`}>
                 {titleBefore}
                 <em>{titleAccent}</em>
@@ -193,17 +211,19 @@ export function ClayProductCase({
               <p className={styles.summary}>{summary}</p>
             </article>
 
-            <figure className={styles.featureShot} key={`${selectedStep.index}-${selectedStep.desktop}`}>
-              <div className={styles.shotCopy}>
-                <span>{selectedStep.index} / KEY SCREEN</span>
-                <strong>{selectedStep.screenLabel}</strong>
-                <p>{selectedStep.screenNote}</p>
-              </div>
-              <div className={styles.shotViewport}>
-                <Image src={selectedStep.desktop} alt={selectedStep.desktopAlt} fill sizes="230px" className={styles.shotImage} />
-              </div>
-              <figcaption>点击右侧章节，桌面与手机画面会同步切换</figcaption>
-            </figure>
+            {phoneLayout === 'default' && (
+              <figure className={styles.featureShot} key={`${selectedStep.index}-${selectedStep.desktop}`}>
+                <div className={styles.shotCopy}>
+                  <span>{selectedStep.index} / KEY SCREEN</span>
+                  <strong>{selectedStep.screenLabel}</strong>
+                  <p>{selectedStep.screenNote}</p>
+                </div>
+                <div className={styles.shotViewport}>
+                  <Image src={selectedStep.desktop} alt={selectedStep.desktopAlt} fill sizes="230px" className={styles.shotImage} />
+                </div>
+                <figcaption>点击右侧章节，桌面与手机画面会同步切换</figcaption>
+              </figure>
+            )}
           </>
         )}
 
@@ -220,7 +240,7 @@ export function ClayProductCase({
                 <div className={styles.desktopTop} aria-hidden="true"><i /><i /><i /><span>{liveDemo ? 'LIVE PRODUCT / DESKTOP' : stageScreenLabel}</span></div>
                 <div className={styles.desktopScreen}>
                   {liveDemo ? (
-                    <iframe className={styles.desktopFrame} src={demoUrl} width="1280" height="720" title={`${name} 桌面端实时 Demo`} sandbox="allow-scripts allow-same-origin allow-forms" />
+                    <iframe className={styles.desktopFrame} src={demoUrl} width="1280" height="720" title={`${name} 桌面端实时 Demo`} sandbox="allow-scripts allow-same-origin allow-forms" onPointerEnter={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: false }))} onPointerLeave={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: true }))} />
                   ) : (
                     <Image src={stageDesktop} alt={stageDesktopAlt} width={1280} height={720} sizes="810px" className={styles.desktopImage} priority />
                   )}
@@ -231,7 +251,7 @@ export function ClayProductCase({
                 <span className={styles.phoneSpeaker} aria-hidden="true" />
                 <div className={styles.phoneScreen}>
                   {liveDemo ? (
-                    <iframe className={styles.phoneFrame} src={demoUrl} width="390" height="844" title={`${name} 手机端实时 Demo`} sandbox="allow-scripts allow-same-origin allow-forms" />
+                    <iframe className={styles.phoneFrame} src={demoUrl} width="390" height="844" title={`${name} 手机端实时 Demo`} sandbox="allow-scripts allow-same-origin allow-forms" onPointerEnter={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: false }))} onPointerLeave={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: true }))} />
                   ) : (
                     <Image src={stagePhone} alt={stagePhoneAlt} width={390} height={844} sizes="203px" className={styles.phoneImage} />
                   )}
@@ -245,7 +265,7 @@ export function ClayProductCase({
                 <span className={styles.singlePhoneTop} aria-hidden="true"><i /></span>
                 <div className={styles.singlePhoneScreen}>
                   {liveDemo ? (
-                    <iframe className={styles.singlePhoneFrame} src={demoUrl} width="390" height="844" title={`${name} 手机端实时 Demo`} sandbox="allow-scripts allow-same-origin allow-forms" />
+                    <iframe className={styles.singlePhoneFrame} src={demoUrl} width="390" height="844" title={`${name} 手机端实时 Demo`} sandbox="allow-scripts allow-same-origin allow-forms" onPointerEnter={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: false }))} onPointerLeave={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: true }))} />
                   ) : (
                     <Image src={selectedStep.phone} alt={selectedStep.phoneAlt} width={390} height={844} sizes="390px" className={styles.singlePhoneImage} priority />
                   )}
@@ -255,12 +275,18 @@ export function ClayProductCase({
             </div>
           )}
 
-          <button className={styles.liveToggle} type="button" aria-pressed={liveDemo} onClick={() => setLiveDemo((current) => !current)}>
+          <button
+            className={styles.liveToggle}
+            type="button"
+            aria-pressed={liveDemo}
+            aria-label={liveDemo ? '点击返回关键产品画面' : '点击查看在线 Demo'}
+            onClick={() => setLiveDemo((current) => !current)}
+          >
             <i aria-hidden="true" />
-            <span><small>{liveDemo ? 'RETURN TO' : 'CLICK TO TRY'}</small><strong>{liveDemo ? 'KEY VIEW' : 'LIVE DEMO'}</strong></span>
+            <span><small>{liveDemo ? '点击返回' : '点击查看'}</small><strong>{liveDemo ? '关键画面' : '在线 DEMO'}</strong></span>
             <b aria-hidden="true">{liveDemo ? '←' : '→'}</b>
           </button>
-          <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true"><span>{selectedStep.index}</span></div>
+          {!embedded && <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true"><span>{selectedStep.index}</span></div>}
         </div>
 
         {deviceMode === 'phone' && <article className={styles.resultsCard}>
@@ -296,6 +322,7 @@ export function ClayProductCase({
               {selectedStep.proof.map((proof, proofIndex) => <span key={proof}><i>0{proofIndex + 1}</i>{proof}</span>)}
             </div>
           </article>
+          {embedded && <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true"><span>{selectedStep.index}</span></div>}
         </aside>}
       </section>
 
