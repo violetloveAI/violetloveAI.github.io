@@ -37,7 +37,7 @@ const contactEntries = [
 
 const downloads = [
   { name: '一页中文简历', meta: '快速了解 · 1 PAGE', image: '/assets/cartoon-clay-v2/resume-buttons/01-one-page-chinese-resume.webp', href: null, filename: null },
-  { name: 'FDE 项目作品集', meta: '项目证据 · CASEBOOK', image: '/assets/cartoon-clay-v2/resume-buttons/03-fde-project-portfolio.webp', href: null, filename: null },
+  { name: 'FDE 项目作品集', meta: '项目证据 · CASEBOOK', image: '/assets/cartoon-clay-v2/resume-buttons/03-fde-project-portfolio.webp', href: '/downloads/xie-zihan-fde-portfolio.pdf', filename: '谢子涵_FDE个人作品集.pdf' },
 ] as const;
 
 const careerStages = [
