@@ -1,0 +1,113 @@
+/* Tactile clay controls: retargetable transitions, with a fixed hit area. */
+.work-project-button-v3 {
+  --work-button-scale: .96;
+  --work-button-rotation: -2deg;
+  opacity: .76;
+  touch-action: manipulation;
+  will-change: auto;
+  transition: transform 220ms var(--ease-out), opacity 160ms ease;
+}
+
+.work-project-button-v3:nth-child(even) {
+  --work-button-rotation: 2deg;
+}
+
+.work-project-button-v3[data-selected='true'] {
+  --work-button-y: -8px;
+  --work-button-scale: 1.02;
+  --work-button-rotation: 0deg;
+  opacity: 1;
+}
+
+.work-project-button-v3 .work-project-art {
+  transform-origin: 50% 80%;
+  scale: 1;
+  translate: 0 0;
+  transition: transform 220ms var(--ease-out), opacity 160ms ease, scale 140ms var(--ease-out), translate 140ms var(--ease-out), filter 140ms ease;
+}
+
+.work-project-button-v3 .work-project-label-v3 {
+  translate: 0 0;
+  transition: transform 220ms var(--ease-out), translate 140ms var(--ease-out);
+}
+
+/* Independent scale/translate compose with the existing dock's transforms. */
+.work-project-button-v3:active .work-project-art {
+  scale: 1.015 .95;
+  translate: 0 3px;
+  filter: drop-shadow(0 3px 4px rgb(0 0 0 / 24%));
+}
+
+.work-project-button-v3:active .work-project-label-v3 {
+  translate: 0 2px;
+}
+
+.work-project-button-v3 .work-project-sparkles-v3 i {
+  animation: none;
+  opacity: .5;
+  transform: scale(.7);
+}
+
+.work-project-button-v3[data-selected='true'] .work-project-sparkles-v3 {
+  opacity: .45;
+}
+
+.work-project-button-v3:focus-visible {
+  outline-color: var(--work-button-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .work-project-button-v3:hover {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1024px) {
+  .work-project-button-v3 { --work-button-scale: .94; }
+  .work-project-button-v3[data-selected='true'] { --work-button-y: -2px; --work-button-scale: 1.02; }
+}
+
+/* Arrow-key browsing is immediate; pointer taps retain the tactile response. */
+.work-canvas-v2[data-work-input='keyboard'] .work-project-button-v3,
+.work-canvas-v2[data-work-input='keyboard'] .work-project-button-v3::before,
+.work-canvas-v2[data-work-input='keyboard'] .work-project-button-v3::after,
+.work-canvas-v2[data-work-input='keyboard'] .work-project-button-v3 > span,
+.work-canvas-v2[data-work-input='keyboard'] .work-project-button-v3 .work-project-art {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-project-button-v3,
+  .work-project-button-v3[data-selected] {
+    --work-button-y: 0px;
+    --work-button-scale: 1;
+    --work-button-rotation: 0deg;
+    transition: opacity 120ms ease;
+  }
+
+  .work-project-button-v3::before,
+  .work-project-button-v3::after,
+  .work-project-button-v3 > span,
+  .work-project-button-v3 .work-project-art {
+    transition: opacity 120ms ease;
+  }
+
+  .work-project-button-v3:active .work-project-art,
+  .work-project-button-v3:active .work-project-label-v3 {
+    scale: 1;
+    translate: 0 0;
+  }
+
+  .work-project-button-v3[data-selected='false']:hover .work-project-art {
+    transform: none;
+  }
+
+  @media (min-width: 1025px) {
+    .work-project-button-v3[data-selected='false']:hover .work-project-art {
+      transform: translateY(42%) scale(.86);
+    }
+    .work-project-button-v3[data-selected='true']:hover .work-project-art {
+      transform: translateY(24%) scale(.97);
+    }
+  }
+}

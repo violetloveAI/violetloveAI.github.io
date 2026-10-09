@@ -1,0 +1,87 @@
+@font-face {
+  font-family: 'Violet Navigation Intro';
+  src: url('/fonts/navigation/intro-sans-v2.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 500 600;
+  font-display: swap;
+}
+
+.intro {
+  position: relative;
+  z-index: 8;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: 12px 32px;
+  padding: 2px 0 20px;
+  color: #204c48;
+  font-family: 'Violet Navigation Intro', 'PingFang SC', sans-serif;
+  font-synthesis: none;
+}
+
+.eyebrow {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: #526f61;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .09em;
+  line-height: 1.5;
+}
+
+.eyebrow::before {
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: #bc8642;
+  content: '';
+}
+
+.title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .25em .6em;
+  margin: 0;
+  font-size: clamp(28px, 2.6vw, 44px);
+  font-weight: 600;
+  letter-spacing: -.035em;
+  line-height: 1.25;
+}
+
+.title em {
+  color: #975536;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+/* Reserve room for the route discs that extend beyond the map's endpoints. */
+@media (min-width: 801px) {
+  .intro + :global(.clay-nav-canvas) { margin: 32px 0 24px; }
+}
+
+@media (min-width: 801px) and (max-height: 760px) {
+  .intro { gap: 8px 28px; padding-bottom: 12px; }
+  .eyebrow { font-size: 11px; }
+  .title { font-size: clamp(26px, 2.35vw, 34px); }
+  .intro + :global(.clay-nav-canvas) {
+    margin-top: clamp(28px, calc(162px - 18svh), 80px);
+    margin-bottom: clamp(20px, calc(108px - 12svh), 52px);
+  }
+  .intro + :global(.clay-nav-canvas) :global(.nav-route-stop) { width: min(14vw, 36svh, 220px); }
+  .intro + :global(.clay-nav-canvas) :global(.clay-nav-anchor-1) { width: min(23vw, 360px); }
+  .intro + :global(.clay-nav-canvas) :global(.clay-nav-anchor-2),
+  .intro + :global(.clay-nav-canvas) :global(.clay-nav-anchor-4) { width: min(18vw, 270px); }
+  .intro + :global(.clay-nav-canvas) :global(.clay-nav-anchor-3),
+  .intro + :global(.clay-nav-canvas) :global(.clay-nav-anchor-5) { width: min(19vw, 285px); }
+}
+
+@media (max-width: 800px) {
+  .intro { grid-template-columns: 1fr; gap: 9px; padding-bottom: 10px; }
+  .eyebrow { font-size: 11px; }
+  .title { font-size: clamp(23px, 6.3vw, 30px); }
+  .intro + :global(.clay-nav-canvas) { margin-top: 14px; }
+}

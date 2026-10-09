@@ -1,8 +1,10 @@
 'use client';
 
 import Image from 'next/image';
+import { useEmbeddedMode } from './useEmbeddedMode';
 import { useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { CaseCursor } from './CaseCursor';
+import { ProjectHighlights } from './ProjectHighlights';
 import styles from './clay-product-case.module.css';
 
 export type ProductStoryStep = {
@@ -15,6 +17,7 @@ export type ProductStoryStep = {
   marker: string;
   desktop: string;
   desktopAlt: string;
+  desktopFit?: 'cover' | 'contain';
   phone: string;
   phoneAlt: string;
   screenLabel: string;
@@ -36,8 +39,10 @@ export type ClayProductCaseProps = {
   titleAccent: string;
   titleAfter: string;
   summary: string;
+  introHighlights?: readonly { title: string; detail: string }[];
   resultLead: string;
   resultAccent: string;
+  highlightResult?: boolean;
   metrics: readonly ProductMetric[];
   storySteps: readonly ProductStoryStep[];
   workflow: string;
@@ -76,15 +81,16 @@ function ExternalArrow() {
 export function ClayProductCase({
   index,
   kind,
-  englishName,
   name,
   status,
   titleBefore,
   titleAccent,
   titleAfter,
   summary,
+  introHighlights = [],
   resultLead,
   resultAccent,
+  highlightResult = false,
   metrics,
   storySteps,
   workflow,
@@ -104,16 +110,17 @@ export function ClayProductCase({
   canvasLight,
   canvas,
   canvasDeep,
-  embedded = false,
+  embedded: embeddedProp = false,
 }: ClayProductCaseProps) {
+  const embedded = useEmbeddedMode(embeddedProp);
   const [activeStep, setActiveStep] = useState(0);
   const [liveDemo, setLiveDemo] = useState(false);
   const selectedStep = storySteps[activeStep];
-  const stageDesktop = showcaseDesktop ?? selectedStep.desktop;
-  const stageDesktopAlt = showcaseDesktopAlt ?? selectedStep.desktopAlt;
-  const stagePhone = showcasePhone ?? selectedStep.phone;
-  const stagePhoneAlt = showcasePhoneAlt ?? selectedStep.phoneAlt;
-  const stageScreenLabel = showcaseLabel ?? selectedStep.screenLabel;
+  const stageDesktop = activeStep === 0 ? (showcaseDesktop ?? selectedStep.desktop) : selectedStep.desktop;
+  const stageDesktopAlt = activeStep === 0 ? (showcaseDesktopAlt ?? selectedStep.desktopAlt) : selectedStep.desktopAlt;
+  const stagePhone = activeStep === 0 ? (showcasePhone ?? selectedStep.phone) : selectedStep.phone;
+  const stagePhoneAlt = activeStep === 0 ? (showcasePhoneAlt ?? selectedStep.phoneAlt) : selectedStep.phoneAlt;
+  const stageScreenLabel = activeStep === 0 ? (showcaseLabel ?? selectedStep.screenLabel) : selectedStep.screenLabel;
   const caseVars: CaseVars = {
     '--case-accent': accent,
     '--case-accent-deep': accentDeep,
@@ -135,7 +142,7 @@ export function ClayProductCase({
   const deviceCopy = deviceMode === 'dual' ? '1280 × 720 + 390 × 844' : '390 × 844 / MOBILE PRODUCT VIEW';
 
   return (
-    <main className={`${styles.page} ${deviceMode === 'dual' ? styles.dualPage : ''} ${phoneLayout === 'three-panel' ? styles.threePanel : ''} ${embedded ? styles.embedded : ''}`} style={caseVars} data-cursor-theme="clay">
+    <main className={`${styles.page} ${styles.readable} ${deviceMode === 'dual' ? styles.dualPage : ''} ${phoneLayout === 'three-panel' ? styles.threePanel : ''} ${introHighlights.length ? styles.hasIntroDetails : ''} ${embedded ? styles.embedded : ''}`} style={caseVars} data-cursor-theme="clay">
       <CaseCursor embedded={embedded} />
       <div className={styles.texture} aria-hidden="true" />
       <header className={styles.topbar}>
@@ -155,8 +162,8 @@ export function ClayProductCase({
         {deviceMode === 'dual' ? (
           <aside className={styles.caseRail} aria-label={`${name} 项目案例说明`}>
             <header className={styles.railHeader}>
-              <div className={styles.statusLine}><span>{status[0]}</span><span>{status[1]}</span></div>
-              <p className={styles.railKicker}>{index} / CASE FILE · {englishName}</p>
+              <ProjectHighlights items={status} />
+              <p className={styles.railKicker}>{index} / {kind}</p>
               <h1 id={`${name}-title`}>
                 {titleBefore}
                 <em>{titleAccent}</em>
@@ -192,8 +199,8 @@ export function ClayProductCase({
             </article>
 
             <footer className={styles.railEvidence}>
-              <p>{resultLead}<strong>{resultAccent}</strong></p>
-              <dl aria-label="项目验证证据">
+              <p>{resultLead}<strong className={highlightResult ? styles.resultAward : undefined}>{resultAccent}</strong></p>
+              <dl aria-label="项目成果">
                 {metrics.map((metric) => <div key={metric.label}><dt>{metric.label}</dt><dd>{metric.value}</dd></div>)}
               </dl>
             </footer>
@@ -201,14 +208,24 @@ export function ClayProductCase({
         ) : (
           <>
             <article className={styles.introCard}>
-              <div className={styles.statusLine}><span>{status[0]}</span><span>{status[1]}</span></div>
-              <p className={styles.kicker}>{index} / AI-ASSISTED BUILD · {englishName}</p>
+              <ProjectHighlights items={status} />
+              <p className={styles.kicker}>{index} / {kind}</p>
               <h1 id={`${name}-title`}>
                 {titleBefore}
                 <em>{titleAccent}</em>
                 {titleAfter}
               </h1>
               <p className={styles.summary}>{summary}</p>
+              {introHighlights.length > 0 && (
+                <dl className={styles.introHighlights} aria-label="产品设计亮点">
+                  {introHighlights.map((highlight, highlightIndex) => (
+                    <div key={highlight.title}>
+                      <dt><span aria-hidden="true">{String(highlightIndex + 1).padStart(2, '0')}</span>{highlight.title}</dt>
+                      <dd>{highlight.detail}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
             </article>
 
             {phoneLayout === 'default' && (
@@ -242,7 +259,7 @@ export function ClayProductCase({
                   {liveDemo ? (
                     <iframe className={styles.desktopFrame} src={demoUrl} width="1280" height="720" title={`${name} 桌面端实时 Demo`} sandbox="allow-scripts allow-same-origin allow-forms" onPointerEnter={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: false }))} onPointerLeave={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: true }))} />
                   ) : (
-                    <Image src={stageDesktop} alt={stageDesktopAlt} width={1280} height={720} sizes="810px" className={styles.desktopImage} priority />
+                    <Image key={`${selectedStep.index}-${stageDesktop}`} src={stageDesktop} alt={stageDesktopAlt} width={1280} height={720} sizes="810px" className={styles.desktopImage} style={{ objectFit: selectedStep.desktopFit }} priority />
                   )}
                 </div>
                 <span className={styles.desktopFoot} aria-hidden="true" />
@@ -253,7 +270,7 @@ export function ClayProductCase({
                   {liveDemo ? (
                     <iframe className={styles.phoneFrame} src={demoUrl} width="390" height="844" title={`${name} 手机端实时 Demo`} sandbox="allow-scripts allow-same-origin allow-forms" onPointerEnter={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: false }))} onPointerLeave={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: true }))} />
                   ) : (
-                    <Image src={stagePhone} alt={stagePhoneAlt} width={390} height={844} sizes="203px" className={styles.phoneImage} />
+                    <Image key={`${selectedStep.index}-${stagePhone}`} src={stagePhone} alt={stagePhoneAlt} width={390} height={844} sizes="203px" className={styles.phoneImage} />
                   )}
                 </div>
                 <span className={styles.phoneHome} aria-hidden="true" />
@@ -289,15 +306,16 @@ export function ClayProductCase({
           {!embedded && <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true"><span>{selectedStep.index}</span></div>}
         </div>
 
-        {deviceMode === 'phone' && <article className={styles.resultsCard}>
-          <span>OUTCOME / 结果</span>
-          <h2>{resultLead}<strong>{resultAccent}</strong></h2>
+        {deviceMode === 'phone' && <div className={styles.detailsColumn}>
+        <article className={styles.resultsCard}>
+          <span>项目亮点</span>
+          <h2>{resultLead}<strong className={highlightResult ? styles.resultAward : undefined}>{resultAccent}</strong></h2>
           <dl className={styles.metrics} aria-label="项目成果">
             {metrics.map((metric) => <div key={metric.label}><dt>{metric.label}</dt><dd>{metric.value}</dd></div>)}
           </dl>
-        </article>}
+        </article>
 
-        {deviceMode === 'phone' && <aside className={styles.storyPanel} aria-label="项目故事">
+        <aside className={styles.storyPanel} aria-label="项目故事">
           <div className={styles.stepTabs} role="tablist" aria-label="切换项目故事章节">
             {storySteps.map((step, stepIndex) => (
               <button
@@ -323,7 +341,8 @@ export function ClayProductCase({
             </div>
           </article>
           {embedded && <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true"><span>{selectedStep.index}</span></div>}
-        </aside>}
+        </aside>
+        </div>}
       </section>
 
       <footer className={styles.footer}>

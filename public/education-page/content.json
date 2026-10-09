@@ -3,6 +3,8 @@
     "title": "教育经历",
     "sectionIndex": "03 / EDUCATION",
     "intro": "会计学打下财务与数据基础；学生组织与辩论经历，训练了我的组织推动和现场表达。",
+    "exploreTitle": "两所学校，记录我的成长。",
+    "exploreHint": "点开学校或标牌，展开校园记忆。",
     "meetSchool": "点击认识",
     "topicOpen": "点击展开",
     "topicSwitch": "点击切换",
@@ -64,10 +66,11 @@
       "image": "/education-page/assets/branches/01-campus-activities.webp",
       "width": 2048,
       "height": 768,
-      "lead": "我把课堂外的兴趣，落到真实项目与公共服务中。",
-      "items": [
-        "省级大学生创新创业训练计划：从问题定义到结项，完成一次完整项目实践",
-        "义教与志愿服务：累计 100+ 小时，2 次获评“优秀义教”"
+  "lead": "我把课堂外的兴趣，落到真实项目与公共服务中。",
+  "items": [
+    "积极参加辩论赛、校运会、科创杯等比赛，连续 3 年获评“校园文化积极分子”",
+    "义教与志愿服务：累计 150+ 小时，全勤参与 2 学期义教，并参加暑期“三下乡”",
+    "省级大学生创新创业训练计划：从问题定义到结项，完成一次完整项目实践"
       ],
       "character": {
         "src": "/education-page/assets/characters/campus-activities-speaker-clay.png",
@@ -76,8 +79,8 @@
         "alt": "手持麦克风进行校园表达的粘土人物形象"
       },
       "details": [
-        {"src": "/education-page/assets/details/campus/01-debate.webp", "width": 1536, "height": 1024, "alt": "校园辩论与表达的黏土风格插画", "label": "校园活动 · 辩论与表达"},
-        {"src": "/education-page/assets/details/campus/03-volunteer-innovation.webp", "width": 1672, "height": 941, "alt": "志愿服务与创新实践的黏土风格插画", "label": "校园活动 · 志愿与创新"}
+        {"src": "/education-page/assets/galleries/activities/01-campus-team.webp", "width": 1600, "height": 1067, "alt": "校园活动团队在活动现场合影", "label": "校园活动 · 团队活动现场"},
+        {"src": "/education-page/assets/galleries/activities/02-volunteer-service.webp", "width": 1600, "height": 1067, "alt": "义教志愿服务中的现场交流", "label": "校园活动 · 义教志愿服务"}
       ],
       "focusX": "-27vw",
       "focusY": "-23vh",
@@ -94,7 +97,7 @@
       "lead": "学生组织与辩论经历，让我长期站在组织者和现场决策者的位置。",
       "items": [
         "商学院学生会主席：统筹约 60 人、4 个部门，全年约 20 场活动累计覆盖约 2,000 人次",
-        "商学院辩论队队长：连续 2 年带领约 20 人队伍，参加约 30 场正式比赛，多次获冠军及最佳辩手",
+    "商学院辩论队队长：带队 3 年，获得院际杯冠军和多次最佳辩手等",
         "明德书院导生长：负责跨宿舍区域的新生沟通与事务协调"
       ],
       "character": {
@@ -104,8 +107,8 @@
         "alt": "手持文件夹和团队模型的学生骨干粘土人物形象"
       },
       "details": [
-        {"src": "/education-page/assets/details/leadership/01-debate-team-captain.webp", "width": 1536, "height": 1024, "alt": "辩论队组织与带队的黏土风格插画", "label": "学生骨干 · 辩论队带队"},
-        {"src": "/education-page/assets/details/leadership/02-student-union-president.webp", "width": 1536, "height": 1024, "alt": "学生会组织协作的黏土风格插画", "label": "学生骨干 · 组织协作"}
+        {"src": "/education-page/assets/galleries/leadership/01-student-congress.webp", "width": 1600, "height": 1067, "alt": "汕头大学商学院学生代表大会现场合影", "label": "学生骨干 · 学生代表大会"},
+        {"src": "/education-page/assets/galleries/leadership/02-student-union-team.webp", "width": 1600, "height": 1067, "alt": "商学院学生组织团队合影", "label": "学生骨干 · 学生组织团队"}
       ],
       "focusX": "-20vw",
       "focusY": "-28vh",
@@ -113,17 +116,17 @@
       "detailY": 96
     },
     {
-      "id": "honors",
+  "id": "honors",
       "label": "在校荣誉",
       "english": "HONORS",
       "image": "/education-page/assets/branches/03-honors.webp",
       "width": 1964,
       "height": 801,
-      "lead": "本科四年，我持续投入学习、组织、辩论与志愿实践，累计获得 30+ 项奖项与荣誉证书。",
+  "lead": "本科四年，我持续投入学习、组织、辩论与志愿实践，也把每一次投入沉淀为看得见的成长与认可。",
       "items": [
         "GPA 3.7 / 4.0 · 专业前 20%",
         "连续 3 年学业优秀奖学金",
-        "企业专项“雅蒂美丽奖学金” · 每年仅 2 人"
+    "在校期间累计获得 30+ 张奖状，代表荣誉包括“商学院优秀学生骨干”，以及每年仅 2 个名额的企业专项奖学金"
       ],
       "character": {
         "src": "/education-page/assets/characters/campus-honors-medal-clay.png",
@@ -132,8 +135,8 @@
         "alt": "手持奖牌和资料的在校荣誉粘土人物形象"
       },
       "details": [
-        {"src": "/education-page/assets/details/honors/02-30plus-honors.webp", "width": 1536, "height": 1024, "alt": "多项校园荣誉的黏土风格插画", "label": "在校荣誉 · 综合荣誉"},
-        {"src": "/education-page/assets/details/honors/03-certificate-archive.webp", "width": 1536, "height": 1024, "alt": "证书归档的黏土风格插画", "label": "在校荣誉 · 证书归档"}
+        {"src": "/education-page/assets/galleries/honors/01-debate-award-img9456-20261009.jpg", "width": 2400, "height": 1600, "alt": "辩论赛获奖现场合影", "label": "在校荣誉 · 辩论赛获奖"},
+        {"src": "/education-page/assets/galleries/honors/02-certificate-wall.webp", "width": 1600, "height": 1200, "alt": "大学期间获得的多项奖状与荣誉证书", "label": "在校荣誉 · 30+ 项奖状记录"}
       ],
       "focusX": "-30vw",
       "focusY": "-17vh",

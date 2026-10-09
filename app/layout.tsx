@@ -10,6 +10,7 @@ import {
 } from 'next/font/google';
 import './globals.css';
 import './v2.css';
+import './work-interactions.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

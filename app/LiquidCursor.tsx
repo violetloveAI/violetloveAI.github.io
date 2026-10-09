@@ -1,16 +1,30 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 type Point = { x: number; y: number };
 
 const frameLerp = (amount: number, delta: number) => 1 - Math.pow(1 - amount, delta / (1000 / 60));
 
 export function LiquidCursor() {
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+  const [pointerMode, setPointerMode] = useState(0);
   const cursorRef = useRef<HTMLDivElement>(null);
   const tailARef = useRef<HTMLElement>(null);
   const tailBRef = useRef<HTMLElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setPortalTarget(document.body));
+    const queries = [window.matchMedia('(hover: hover) and (pointer: fine)'), window.matchMedia('(prefers-reduced-motion: reduce)')];
+    const refresh = () => setPointerMode((mode) => mode + 1);
+    queries.forEach((query) => query.addEventListener('change', refresh));
+    return () => {
+      cancelAnimationFrame(frame);
+      queries.forEach((query) => query.removeEventListener('change', refresh));
+    };
+  }, []);
 
   useEffect(() => {
     const cursor = cursorRef.current;
@@ -20,7 +34,7 @@ export function LiquidCursor() {
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    if (!cursor || !tailA || !tailB || !label || !finePointer.matches || reducedMotion.matches) return;
+    if (!cursor || !tailA || !tailB || !label || !finePointer.matches) return;
 
     const target: Point = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     const lead: Point = { ...target };
@@ -31,10 +45,10 @@ export function LiquidCursor() {
     let hasMoved = false;
 
     const setInteractiveTarget = (eventTarget: EventTarget | null) => {
-      const targetElement = eventTarget instanceof Element ? eventTarget : null;
-      const interactive = eventTarget instanceof Element
-        ? eventTarget.closest<HTMLElement>('[data-cursor-label], a[href], button:not(:disabled), [role="button"], [role="tab"]')
-        : null;
+      // Same-origin iframe elements belong to a different JavaScript realm.
+      const node = eventTarget as Node | null;
+      const targetElement = node?.nodeType === 1 ? node as Element : node?.parentElement ?? null;
+      const interactive = targetElement?.closest<HTMLElement>('[data-cursor-label], a[href], button:not(:disabled), [role="button"], [role="tab"]');
       const cursorLabel = interactive?.dataset.cursorLabel
         ?? (interactive?.getAttribute('role') === 'tab' ? 'SWITCH / 切换' : interactive?.tagName === 'A' ? 'OPEN / 打开' : interactive ? 'CLICK / 点击' : '');
       const claySurface = targetElement?.closest(
@@ -48,10 +62,11 @@ export function LiquidCursor() {
       label.textContent = cursorLabel;
     };
 
-    const handlePointerMove = (event: PointerEvent) => {
-      target.x = event.clientX;
-      target.y = event.clientY;
-      setInteractiveTarget(event.target);
+    const moveTo = (x: number, y: number, eventTarget: EventTarget | null) => {
+      if (document.documentElement.classList.contains('fde-opening-active')) return;
+      target.x = x;
+      target.y = y;
+      setInteractiveTarget(eventTarget);
       cursor.dataset.visible = 'true';
 
       if (!hasMoved) {
@@ -61,6 +76,7 @@ export function LiquidCursor() {
         cursor.dataset.visible = 'true';
       }
     };
+    const handlePointerMove = (event: PointerEvent) => moveTo(event.clientX, event.clientY, event.target);
 
     const handlePointerDown = () => { cursor.dataset.down = 'true'; };
     const handlePointerUp = () => { cursor.dataset.down = 'false'; };
@@ -95,14 +111,63 @@ export function LiquidCursor() {
       animationFrame = requestAnimationFrame(render);
     };
 
-    document.documentElement.classList.add('liquid-cursor-enabled');
+    if (!reducedMotion.matches) document.documentElement.classList.add('liquid-cursor-enabled');
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
     window.addEventListener('pointerdown', handlePointerDown, { passive: true });
     window.addEventListener('pointerup', handlePointerUp, { passive: true });
     document.documentElement.addEventListener('mouseleave', handlePointerLeave);
     document.documentElement.addEventListener('mouseenter', handlePointerEnter);
     window.addEventListener('violet-cursor-visibility', handleExternalVisibility);
-    animationFrame = requestAnimationFrame(render);
+
+    // Paint one cursor above the whole page, including the chapter plaques.
+    // A cursor drawn inside an iframe cannot escape its stacking boundary.
+    const frames = new Map<HTMLIFrameElement, () => void>();
+    const syncFrames = () => {
+      const current = new Set(document.querySelectorAll<HTMLIFrameElement>('#work iframe.work-embed-frame-v3'));
+      frames.forEach((dispose, frame) => {
+        if (!current.has(frame)) { dispose(); frames.delete(frame); }
+      });
+      current.forEach((frame) => {
+        if (frames.has(frame)) return;
+        let unbind: (() => void) | undefined;
+        const onLoad = () => {
+          unbind?.();
+          unbind = undefined;
+          try {
+            const doc = frame.contentDocument;
+            if (!doc || frame.contentWindow?.location.origin !== window.location.origin) return;
+            const onMove = (event: PointerEvent) => {
+              const rect = frame.getBoundingClientRect();
+              if (!frame.offsetWidth || !frame.offsetHeight) return;
+              const x = rect.left + event.clientX * rect.width / frame.offsetWidth;
+              const y = rect.top + event.clientY * rect.height / frame.offsetHeight;
+              moveTo(x, y, event.target);
+              window.dispatchEvent(new CustomEvent('violet-frame-pointer-move', { detail: { x, y } }));
+            };
+            if (!reducedMotion.matches) doc.documentElement.classList.add('liquid-cursor-enabled');
+            doc.addEventListener('pointermove', onMove, { passive: true });
+            doc.addEventListener('pointerdown', handlePointerDown, { passive: true });
+            doc.addEventListener('pointerup', handlePointerUp, { passive: true });
+            doc.addEventListener('pointercancel', handlePointerUp, { passive: true });
+            unbind = () => {
+              doc.documentElement.classList.remove('liquid-cursor-enabled');
+              doc.removeEventListener('pointermove', onMove);
+              doc.removeEventListener('pointerdown', handlePointerDown);
+              doc.removeEventListener('pointerup', handlePointerUp);
+              doc.removeEventListener('pointercancel', handlePointerUp);
+            };
+          } catch { /* Cross-origin content keeps its native cursor. */ }
+        };
+        frame.addEventListener('load', onLoad);
+        onLoad();
+        frames.set(frame, () => { frame.removeEventListener('load', onLoad); unbind?.(); });
+      });
+    };
+    syncFrames();
+    const frameObserver = new MutationObserver(syncFrames);
+    const work = document.getElementById('work');
+    if (work) frameObserver.observe(work, { childList: true, subtree: true });
+    if (!reducedMotion.matches) animationFrame = requestAnimationFrame(render);
 
     return () => {
       document.documentElement.classList.remove('liquid-cursor-enabled');
@@ -112,11 +177,15 @@ export function LiquidCursor() {
       document.documentElement.removeEventListener('mouseleave', handlePointerLeave);
       document.documentElement.removeEventListener('mouseenter', handlePointerEnter);
       window.removeEventListener('violet-cursor-visibility', handleExternalVisibility);
+      frameObserver.disconnect();
+      frames.forEach((dispose) => dispose());
       cancelAnimationFrame(animationFrame);
     };
-  }, []);
+  }, [portalTarget, pointerMode]);
 
-  return (
+  if (!portalTarget) return null;
+
+  return createPortal(
     <>
       <svg className="liquid-filter-bank" aria-hidden="true">
         <defs>
@@ -153,6 +222,7 @@ export function LiquidCursor() {
         </div>
         <span ref={labelRef} className="liquid-cursor-label" />
       </div>
-    </>
+    </>,
+    portalTarget,
   );
 }

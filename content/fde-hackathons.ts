@@ -1,0 +1,46 @@
+export const fdeHackathons = [
+  {
+    id: 'jialihua', name: '家里话', mode: '独立交付',
+    photoPlaceholder: '颁奖照片待补',
+    eyebrow: '01 / SOLO DELIVERY',
+    title: '独立交付《家里话》，获黑客松赛道冠军',
+    summary: '让长辈看懂微信消息、听见熟悉乡音。我负责产品取舍、双端体验与 AI 辅助开发，串起解读、朗读和导出。',
+    proof: ['BAYTECH · AI 应用与工程赛道第一名', '独立参赛 · 产品、开发与路演', '消息解读、乡音朗读与视频导出'],
+    note: '围绕长辈阅读与子女协助，完成双端产品体验。',
+    href: '/works/jialihua',
+    images: [
+      { src: '/projects/jialihua/elder-explanation.png', alt: '家里话老人端的大字解释与河南话朗读界面，内容为虚构演示案例', label: '老人端 · 看解释、听乡音' },
+      { src: '/projects/jialihua/helper-export.png', alt: '家里话子女端的图文与视频导出预览，内容为虚构演示案例', label: '子女端 · 核对后再分享' },
+    ],
+    mediaNote: '产品界面截图 · 颁奖照片待补',
+  },
+  {
+    id: 'final-human', name: 'Final Human', mode: '双人协作',
+    eyebrow: '02 / 24H DELIVERY',
+    title: '两人协作，24 小时完成双奖作品',
+    summary: '与队友完成 AI 幻觉调查游戏 Final Human。我主导选题、玩法、产品推进与路演，并参与开发协作。',
+    proof: ['游戏赛道亚军', '跨赛道“一发入魂奖”', '两人团队 · 产品与路演负责人'],
+    note: '从范围取舍、协作推进到现场演示。',
+    href: '/works/final-human',
+    images: [
+      { src: '/assets/career-proof/gallery/hackathon-build/01-hackathon-photo.webp', alt: 'Final Human 获得的游戏赛道亚军与一发入魂奖两块奖牌', label: 'Final Human · 双奖奖牌' },
+      { src: '/assets/career-proof/gallery/hackathon-build/02-hackathon-photo.webp', alt: '深圳特种兵黑客松获奖现场合影', label: 'Final Human · 获奖现场' },
+    ],
+    mediaNote: '赛事现场记录',
+  },
+  {
+    id: 'english-buddy', name: '英语搭子团', mode: '团队共创',
+    photoPlaceholder: '团队现场照片待补',
+    eyebrow: '03 / TEAM CO-CREATION',
+    title: '五位学习搭子，接住同一份上下文',
+    summary: '我负责产品方向、体验串联与演示交付，与队友共同开发。五位专项搭子共享原句、作答与提示，接着帮用户练习。',
+    proof: ['队长 · 产品方向与体验串联', '真实用户使用 · 投资者正向反馈', '五角色分工 · 学习上下文共享'],
+    note: '让词汇、阅读与表达练习接续进行，减少学习过程中的重复解释。',
+    href: '/works/english-buddy',
+    images: [
+      { src: '/projects/english-buddy/wrong-answer.png', alt: '英语搭子团阅读答错后，在原题下由词芽芽继续帮助的手机界面', label: '阅读卡点 · 词汇搭子接着帮' },
+      { src: '/projects/english-buddy/writing-source.png', alt: '英语搭子团写作搭子承接用户确认后的原话并保留来源', label: '表达交接 · 保留原话与来源' },
+    ],
+    mediaNote: '产品界面截图 · 团队现场照片待补',
+  },
+] as const;

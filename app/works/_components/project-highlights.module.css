@@ -1,0 +1,30 @@
+.highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--clay-ink, var(--ink, #17332e));
+  font-family: var(--font-geist-sans), 'PingFang SC', sans-serif;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.5;
+  cursor: default;
+}
+
+.highlights li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.highlights li::before {
+  width: 4px;
+  height: 4px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+  opacity: .6;
+}

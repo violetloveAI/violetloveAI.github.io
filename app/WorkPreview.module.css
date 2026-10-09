@@ -1,0 +1,46 @@
+.stage {
+  isolation: isolate;
+}
+
+.preview {
+  isolation: isolate;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms var(--ease-out);
+}
+
+.layer[data-visible='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.layer[inert] {
+  pointer-events: none;
+}
+
+.stage[data-instant='true'] .layer {
+  transition: none;
+}
+
+@media (min-width: 1025px) {
+  /* Every case uses the same single-screen viewport. */
+  :global(.work-stage-v3[data-active-work]) > :global(.work-feature-v3.work-feature-embed-v3).stage {
+    top: 0;
+    height: 100%;
+  }
+
+  :global(.work-stage-v3[data-active-work]) .stage :global(.work-embed-links-v3) {
+    top: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer {
+    transition: none;
+  }
+}

@@ -1,9 +1,10 @@
 'use client';
 
 import Image from 'next/image';
+import { useEmbeddedMode } from '../_components/useEmbeddedMode';
 import { useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { CaseCursor } from '../_components/CaseCursor';
-import { useEmbeddedMode } from '../_components/useEmbeddedMode';
+import { ProjectHighlights } from '../_components/ProjectHighlights';
 import styles from './final-human.module.css';
 
 const githubUrl = 'https://github.com/violetloveAI/finalhuman';
@@ -11,50 +12,50 @@ const githubUrl = 'https://github.com/violetloveAI/finalhuman';
 const chapters = [
   {
     index: '01', label: '创意命题', english: 'CONCEPT',
-    title: '把 AI 幻觉风险，变成一场追问证据的调查。',
-    body: '验证 AI 虚构客户、层层误传。玩家要在幻觉进入产品前找出源头。',
-    proof: ['AI 安全议题游戏化', '3 个 AI + 1 个人类', '明确故事冲突'],
+    title: '让 AI 幻觉成为推理线索。',
+    body: '玩家扮演最后一位人类员工，追查 AI 虚构客户的源头。用质询、取证与裁决，把抽象的 AI 幻觉变成可参与的推理体验。',
+    proof: ['AI 议题游戏化', '证据驱动推理'],
     gameImage: '/projects/final-human/opening.webp',
     gameRatio: '1672 / 941',
     gameAlt: 'Final Human 游戏开场：最后一个人类员工',
     gameCaption: '开场：最后一个人类员工',
-    awardImage: '/projects/final-human/game-verdict.webp',
+    awardImage: '/projects/final-human/runner-up.webp',
     awardRatio: '4000 / 2666',
-    awardAlt: 'Final Human 调查结案界面',
-    awardCaption: '隐私友好预览 · 调查结案',
+    awardAlt: 'Final Human 团队获得 AI Ping 特种兵黑客松游戏开发赛道亚军',
+    awardCaption: '游戏开发赛道 · 亚军',
   },
   {
-    index: '02', label: '玩法与角色', english: 'BUILD',
-    title: '有限 TOKEN、证据卡与庭审，把核验做成玩法。',
-    body: '我主导选题、方案、核心玩法、产品推进与路演，并与队友协作完成开发。',
-    proof: ['2 人团队', '负责人 / 主策', '协作开发 + 主力路演'],
+    index: '02', label: '玩法与贡献', english: 'BUILD',
+    title: '让每次提问，都成为选择。',
+    body: '用有限 Token 约束质询，以证据卡推动庭审。我主导选题、玩法、产品推进与路演，与队友协作开发完整调查流程。',
+    proof: ['有限 Token 策略', '主导产品与路演'],
     gameImage: '/projects/final-human/game-investigation.webp',
     gameRatio: '2552 / 1284',
     gameAlt: 'Final Human 调查界面：玩家选择一位 AI 同事提出质询',
-    gameCaption: '调查：用有限 TOKEN 逐层质询',
-    awardImage: '/projects/final-human/game-investigation.webp',
+    gameCaption: '调查：在有限 Token 内追出真相',
+    awardImage: '/projects/final-human/special-award.webp',
     awardRatio: '4000 / 2666',
-    awardAlt: 'Final Human 调查与质询界面',
-    awardCaption: '隐私友好预览 · 调查质询',
+    awardAlt: 'Final Human 团队获得跨赛道专项奖极准一发入魂奖',
+    awardCaption: '跨赛道专项奖 · 极准·一发入魂',
   },
   {
-    index: '03', label: '双奖验证', english: 'PROOF',
-    title: '一件作品，同时获得赛道亚军与跨赛道专项奖。',
-    body: 'Final Human 获游戏开发赛道亚军和“极准·一发入魂”专项奖。',
-    proof: ['游戏开发赛道亚军', '极准·一发入魂', '完整游戏 + 现场路演'],
+    index: '03', label: '交付与获奖', english: 'PROOF',
+    title: '两人 24 小时，交付双奖作品。',
+    body: '两人团队在 24 小时内完成游戏与现场路演，获游戏开发赛道亚军、跨赛道“极准·一发入魂”专项奖，团队奖金共 ¥3,000。',
+    proof: ['游戏赛道亚军', '极准·一发入魂'],
     gameImage: '/projects/final-human/game-verdict.webp',
     gameRatio: '2277 / 1280',
     gameAlt: 'Final Human 调查结案界面：玩家判断哪些 AI 产生了幻觉',
-    gameCaption: '结案：确认幻觉是否进入产品',
-    awardImage: '/projects/final-human/opening.webp',
+    gameCaption: '结案：用证据裁决幻觉来源',
+    awardImage: '/projects/final-human/two-awards.webp',
     awardRatio: '5712 / 4284',
-    awardAlt: 'Final Human 游戏开场画面',
-    awardCaption: '隐私友好预览 · 游戏开场',
+    awardAlt: 'Final Human 获得的游戏开发赛道亚军与极准一发入魂奖两张奖状',
+    awardCaption: '游戏赛道亚军与专项奖',
   },
 ] as const;
 
-export function FinalHumanCase({ embedded = false }: { embedded?: boolean }) {
-  const isEmbedded = useEmbeddedMode(embedded);
+export function FinalHumanCase({ embedded: embeddedProp = false }: { embedded?: boolean }) {
+  const embedded = useEmbeddedMode(embeddedProp);
   const [activeChapter, setActiveChapter] = useState(0);
   const selected = chapters[activeChapter];
   const showNextChapter = () => setActiveChapter((current) => (current + 1) % chapters.length);
@@ -69,8 +70,8 @@ export function FinalHumanCase({ embedded = false }: { embedded?: boolean }) {
   };
 
   return (
-    <main className={`${styles.page} ${isEmbedded ? styles.embedded : ''}`} data-cursor-theme="clay">
-      <CaseCursor embedded={isEmbedded} />
+    <main className={`${styles.page} ${styles.readable} ${embedded ? styles.embedded : ''}`} data-cursor-theme="clay">
+      <CaseCursor embedded={embedded} />
       <div className={styles.texture} aria-hidden="true" />
       <header className={styles.topbar}>
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
@@ -84,10 +85,10 @@ export function FinalHumanCase({ embedded = false }: { embedded?: boolean }) {
 
         <aside className={styles.caseRail} aria-label="Final Human 项目案例说明">
           <header className={styles.railHeader}>
-            <div className={styles.statusLine}><span>2-PERSON TEAM</span><span>DOUBLE AWARD</span></div>
-            <p>05 / CASE FILE · FINAL HUMAN</p>
-            <h1 id="final-human-title">把 AI 幻觉，<em>做成一场可取证的调查游戏。</em></h1>
-            <small>深圳特种兵黑客松 · 48 小时 · 清程极智主办。</small>
+            <ProjectHighlights items={['AI 议题游戏化', '24 小时双奖']} />
+            <p>05 / 24 小时交付</p>
+            <h1 id="final-human-title">把 AI 幻觉，<em>做成调查游戏。</em></h1>
+            <small>深圳特种兵黑客松 · 两人团队 · 清程极智主办。</small>
           </header>
 
           <div className={styles.railTabs} role="tablist" aria-label="切换 Final Human 案例章节">
@@ -114,19 +115,19 @@ export function FinalHumanCase({ embedded = false }: { embedded?: boolean }) {
           </article>
 
           <footer className={styles.railEvidence}>
-            <p>作品证据，不只是参赛记录。</p>
+            <p>从玩法设计到现场路演，24 小时落地。</p>
             <dl>
-              <div><dt>AWARDS</dt><dd>亚军 + 专项奖</dd></div>
-              <div><dt>TEAM PRIZE</dt><dd>¥2,500 + ¥500</dd></div>
-              <div><dt>ROLE</dt><dd>负责人 / 主策 / 路演</dd></div>
-              <div><dt>DELIVERY</dt><dd>完整游戏 + 路演</dd></div>
+              <div><dt>获奖</dt><dd>亚军 + 专项奖</dd></div>
+              <div><dt>团队奖金</dt><dd>¥2,500 + ¥500</dd></div>
+              <div><dt>我的贡献</dt><dd>产品主导 / 玩法 / 路演</dd></div>
+              <div><dt>团队交付</dt><dd>完整游戏 + 现场路演</dd></div>
             </dl>
           </footer>
         </aside>
 
         <div className={styles.awardStage}>
           <div className={styles.subjectArt} aria-hidden="true"><Image src="/projects/clay-subjects/final-human.webp" alt="" fill sizes="420px" unoptimized /></div>
-          <span className={styles.stageLabel}>TWO SYNCHRONIZED CAROUSELS · CLICK EITHER FRAME</span>
+          <span className={styles.stageLabel}>点击图片，探索玩法与获奖现场</span>
           <button className={`${styles.carouselFrame} ${styles.gameCarousel}`} type="button" onClick={showNextChapter} aria-label={`游戏截图 ${activeChapter + 1}/3：${selected.gameCaption}。点击查看下一张`}>
             <span className={styles.carouselImage} key={selected.gameImage} style={{ '--media-ratio': selected.gameRatio } as CSSProperties}><Image src={selected.gameImage} alt={selected.gameAlt} fill sizes="(min-width: 981px) 48vw, 90vw" priority /></span>
             <span className={styles.carouselCaption}><i>GAME {selected.index} / 03</i><strong>{selected.gameCaption}</strong><small>点击切换 →</small></span>

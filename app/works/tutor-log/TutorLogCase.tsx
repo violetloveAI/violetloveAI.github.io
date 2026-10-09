@@ -1,9 +1,10 @@
 'use client';
 
 import Image from 'next/image';
+import { useEmbeddedMode } from '../_components/useEmbeddedMode';
 import { useState, type KeyboardEvent } from 'react';
 import { CaseCursor } from '../_components/CaseCursor';
-import { useEmbeddedMode } from '../_components/useEmbeddedMode';
+import { ProjectHighlights } from '../_components/ProjectHighlights';
 import styles from './tutor-log.module.css';
 
 const demoUrl = 'https://violetloveai.github.io/yang-teacher-tutor/';
@@ -11,24 +12,24 @@ const demoUrl = 'https://violetloveai.github.io/yang-teacher-tutor/';
 const storySteps = [
   {
     index: '01',
-    label: '匿名用户',
+    label: '工作场景',
     english: 'DISCOVER',
-    title: '为一位具体的独立教师构建，从匿名日常开始。',
-    body: '我从脱敏的一天开始理解问题：课表分散、临时调课难追踪、学生情况靠记忆，月底再重新核对收入与通勤。',
-    proof: ['匿名使用者场景', '私人版已交付', '私人数据与公开 Demo 隔离'],
-    marker: 'ANONYMIZED USER / DAILY WORK',
+    title: '把分散的家教日常，收进一个工作台。',
+    body: '从老师的实际工作出发，将课表、临时调课、学生记录与收入核对整合起来，减少在日历、备忘录和账本之间切换。',
+    proof: ['真实使用反馈', '课程统一管理'],
+    marker: 'REAL USER / DAILY WORK',
     screenshot: '/projects/tutor-log/calendar-month.png',
     screenshotAlt: 'Tutor Log 月历与当天课程界面',
     screenLabel: '月历与当天课程',
-    screenNote: '先回答老师每天最频繁的问题：今天上什么课、接下来要去哪里。',
+    screenNote: '当天课程、学生与地点一目了然，出门前就能安排好教学行程。',
   },
   {
     index: '02',
-    label: '核心闭环',
+    label: '业务闭环',
     english: 'DESIGN',
-    title: '把一节课前后的动作，收进同一条工作流。',
-    body: '从重复排课、出发提醒，到学生档案、课后记录和收款状态，不再让老师在日历、备忘录与计算器之间来回切换。',
-    proof: ['月历 + 双版本周课表', '重复排课与本机提醒', '学生档案与教学记录'],
+    title: '一节课，从排课到收款。',
+    body: '以课程为主线，连通重复排课、出发提醒、学生档案、课后记录与收款状态，让教学安排和收入核对自然衔接。',
+    proof: ['排课与出发提醒', '教学与收款关联'],
     marker: 'SCHEDULE → TEACH → REVIEW',
     screenshot: '/projects/tutor-log/calendar-week.png',
     screenshotAlt: 'Tutor Log 周课表界面',
@@ -37,24 +38,24 @@ const storySteps = [
   },
   {
     index: '03',
-    label: '关键取舍',
+    label: '经营视角',
     english: 'DECIDE',
-    title: '数据可信、使用安心，比堆叠功能更重要。',
-    body: '产品坚持离线优先；报价、通勤成本与真实时薪放在同一套统计中；备份使用密码加密，公开预览只保留虚构数据。',
-    proof: ['离线优先', '真实时薪与收款统计', 'AES-GCM 加密备份'],
+    title: '每节课赚多少，要算完整投入。',
+    body: '扣除通勤费用，将备课、通勤与善后计入投入时间，算出真实时薪，为老师比较课程回报提供依据。',
+    proof: ['真实时薪核算', '通勤成本与时间'],
     marker: 'PRIVATE BY DEFAULT',
     screenshot: '/projects/tutor-log/stats.png',
     screenshotAlt: 'Tutor Log 教学收入与真实时薪统计界面',
     screenLabel: '收入与真实时薪',
-    screenNote: '不只统计课时，也把收款进度、通勤和实际投入放进同一套经营视角。',
+    screenNote: '将收款进度、通勤成本和时间投入放在一起，看清教学收入与实际回报。',
   },
   {
     index: '04',
-    label: '我的角色',
+    label: '我的贡献',
     english: 'DELIVER',
-    title: '我独立把模糊需求推进成可以交付的产品。',
-    body: '我负责需求澄清、范围、交互与视觉、AI 辅助开发、测试、隐私边界和交付；公开版仍在上架准备中。',
-    proof: ['独立 0→1', '私人版已交付使用', '公开版筹备中'],
+    title: '从用户访谈到 iPhone 交付。',
+    body: '独立负责需求、交互、AI 辅助开发与测试，交付离线可用、支持加密备份的 iPhone 私人版，并持续按使用反馈迭代。',
+    proof: ['独立完成 0→1', '离线与加密备份'],
     marker: 'OWNER / BUILDER / ITERATOR',
     screenshot: '/projects/tutor-log/student-detail.png',
     screenshotAlt: 'Tutor Log 学生档案与学习轨迹界面',
@@ -63,8 +64,8 @@ const storySteps = [
   },
 ] as const;
 
-export function TutorLogCase({ embedded = false }: { embedded?: boolean }) {
-  const isEmbedded = useEmbeddedMode(embedded);
+export function TutorLogCase({ embedded: embeddedProp = false }: { embedded?: boolean }) {
+  const embedded = useEmbeddedMode(embeddedProp);
   const [activeStep, setActiveStep] = useState(0);
   const [liveDemo, setLiveDemo] = useState(false);
   const selectedStep = storySteps[activeStep];
@@ -79,8 +80,8 @@ export function TutorLogCase({ embedded = false }: { embedded?: boolean }) {
   };
 
   return (
-    <main className={`${styles.page} ${isEmbedded ? styles.embedded : ''}`} data-cursor-theme="clay">
-      <CaseCursor embedded={isEmbedded} />
+    <main className={`${styles.page} ${styles.readable} ${embedded ? styles.embedded : ''}`} data-cursor-theme="clay">
+      <CaseCursor embedded={embedded} />
       <div className={styles.texture} aria-hidden="true" />
       <header className={styles.topbar}>
         {/* vinext's production Link prefetch currently throws on hash navigation. */}
@@ -90,7 +91,7 @@ export function TutorLogCase({ embedded = false }: { embedded?: boolean }) {
         </a>
         <div className={styles.identity}>
           <span>VIOLET XIE / PERSONAL WEBSITE</span>
-          <span>04 / ANONYMIZED USER CASE</span>
+          <span>04 / REAL USER PRODUCT</span>
         </div>
         <a className={styles.topDemoLink} href={demoUrl} target="_blank" rel="noreferrer">
           OPEN DEMO <span aria-hidden="true">↗</span>
@@ -106,38 +107,30 @@ export function TutorLogCase({ embedded = false }: { embedded?: boolean }) {
         </div>
 
         <article className={styles.introCard}>
-          <div className={styles.statusLine}>
-            <span>ANONYMIZED CASE</span>
-            <span>PRIVATE VERSION DELIVERED</span>
-          </div>
-          <p className={styles.kicker}>04 / AI-ASSISTED BUILD · TUTOR LOG</p>
+          <ProjectHighlights items={['家教经营工作台', '独立交付 iPhone']} />
+          <p className={styles.kicker}>04 / 课时簿 · TUTOR LOG</p>
           <h1 id="case-title">
-            把独立教师的
-            <em>课表、学生和工资，</em>
-            装进一部每天会用的 App。
+            排课、教学与收入，
+            <em>一处管理。</em>
           </h1>
           <p className={styles.summary}>
-            从匿名使用场景出发的 iPhone 家教工作台，由我独立完成并交付私人版。
+            从真实家教工作流出发，独立交付 iPhone 私人版，把排课、教学记录与收款管理连成闭环。
           </p>
+          <ol className={styles.designHighlights} aria-label="产品设计亮点">
+            <li>
+              <span aria-hidden="true">01</span>
+              <div><strong>课表到收款</strong><p>一节课串起教学与收入</p></div>
+            </li>
+            <li>
+              <span aria-hidden="true">02</span>
+              <div><strong>真实时薪</strong><p>将备课、通勤计入投入</p></div>
+            </li>
+            <li>
+              <span aria-hidden="true">03</span>
+              <div><strong>离线使用</strong><p>加密备份随时恢复</p></div>
+            </li>
+          </ol>
         </article>
-
-        <figure className={styles.featureShot} key={selectedStep.screenshot}>
-          <div className={styles.shotCopy}>
-            <span>{selectedStep.index} / KEY SCREEN</span>
-            <strong>{selectedStep.screenLabel}</strong>
-            <p>{selectedStep.screenNote}</p>
-          </div>
-          <div className={styles.shotViewport}>
-            <Image
-              src={selectedStep.screenshot}
-              alt={selectedStep.screenshotAlt}
-              fill
-              sizes="160px"
-              className={styles.shotImage}
-            />
-          </div>
-          <figcaption>点击右侧章节，查看对应产品界面</figcaption>
-        </figure>
 
         <div className={styles.productStage}>
           <span className={styles.stageLabel}>375 × 812 / NATIVE PRODUCT VIEW</span>
@@ -152,15 +145,16 @@ export function TutorLogCase({ embedded = false }: { embedded?: boolean }) {
                     src={demoUrl}
                     width="375"
                     height="812"
-                    title="家教计薪器正式版功能预览"
+                    title="课时簿网页功能预览（虚构数据）"
                     sandbox="allow-scripts allow-same-origin allow-forms"
                     onPointerEnter={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: false }))}
                     onPointerLeave={() => window.dispatchEvent(new CustomEvent('violet-cursor-visibility', { detail: true }))}
                   />
                 ) : (
                   <Image
-                    src="/projects/tutor-log/calendar.jpg"
-                    alt="家教计薪器当天课程、事项与导航界面"
+                    key={selectedStep.screenshot}
+                    src={selectedStep.screenshot}
+                    alt={selectedStep.screenshotAlt}
                     width={375}
                     height={812}
                     sizes="375px"
@@ -176,7 +170,7 @@ export function TutorLogCase({ embedded = false }: { embedded?: boolean }) {
             className={styles.liveToggle}
             type="button"
             aria-pressed={liveDemo}
-            aria-label={liveDemo ? '点击返回关键产品画面' : '点击查看在线 Demo'}
+            aria-label={liveDemo ? '点击返回关键产品画面' : '点击查看在线 Demo，使用虚构数据演示'}
             onClick={() => setLiveDemo((current) => !current)}
           >
             <i aria-hidden="true" />
@@ -186,19 +180,20 @@ export function TutorLogCase({ embedded = false }: { embedded?: boolean }) {
             </span>
             <b aria-hidden="true">{liveDemo ? '←' : '→'}</b>
           </button>
-          {!isEmbedded && <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true">
+          {!embedded && <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true">
             <span>{selectedStep.index}</span>
           </div>}
         </div>
 
+        <div className={styles.detailsColumn}>
         <article className={styles.resultsCard}>
-          <span>OUTCOME / 结果</span>
-          <h2>私人版已交付，<strong>公开版在筹备。</strong></h2>
+          <span>产品成果</span>
+          <h2>已进入老师的<strong>日常工作。</strong></h2>
           <dl className={styles.metrics} aria-label="项目成果">
-            <div><dt>USER</dt><dd>匿名教师场景</dd></div>
-            <div><dt>SCOPE</dt><dd>独立 0→1</dd></div>
-            <div><dt>DELIVERY</dt><dd>私人版已使用</dd></div>
-            <div><dt>NEXT</dt><dd>公开版筹备中</dd></div>
+            <div><dt>使用</dt><dd>真实家教工作流</dd></div>
+            <div><dt>交付</dt><dd>iPhone 私人版</dd></div>
+            <div><dt>职责</dt><dd>0→1 独立交付</dd></div>
+            <div><dt>亮点</dt><dd>真实时薪核算</dd></div>
           </dl>
         </article>
 
@@ -239,10 +234,11 @@ export function TutorLogCase({ embedded = false }: { embedded?: boolean }) {
               ))}
             </div>
           </article>
-          {isEmbedded && <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true">
+          {embedded && <div className={styles.productMarker} key={selectedStep.marker} aria-hidden="true">
             <span>{selectedStep.index}</span>
           </div>}
         </aside>
+        </div>
       </section>
 
       <footer className={styles.footer}>

@@ -1,0 +1,74 @@
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 56px clamp(16px, 4vw, 64px) max(20px, env(safe-area-inset-bottom));
+  overflow: hidden;
+  border: 0;
+  background: rgba(8, 24, 23, .94);
+  color: #fffaf0;
+  cursor: zoom-out;
+}
+
+.dialog[open] {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 16px;
+}
+
+.dialog::backdrop {
+  background: rgba(8, 24, 23, .94);
+}
+
+.picture {
+  position: relative;
+  min-height: 0;
+  width: 100%;
+}
+
+.picture img {
+  object-fit: contain;
+  cursor: zoom-out;
+}
+
+.caption {
+  text-align: center;
+}
+
+.caption p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.caption p + p {
+  margin-top: 4px;
+  color: #c7d4cb;
+  font-size: 14px;
+}
+
+.dialog .close {
+  position: absolute;
+  top: max(8px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(255, 250, 240, .35);
+  border-radius: 50%;
+  background: rgba(255, 250, 240, .08);
+  color: inherit;
+  font-size: 30px;
+  line-height: 1;
+  cursor: zoom-out;
+}
+
+.dialog .close:focus-visible {
+  outline: 3px solid #edb955;
+  outline-offset: 3px;
+}

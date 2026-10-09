@@ -6,7 +6,7 @@ export function CaseCursor({ embedded = false }: { embedded?: boolean }) {
   return (
     <>
       {embedded ? <style>{'html, body { background: transparent !important; }'}</style> : null}
-      <LiquidCursor />
+      {!embedded && <LiquidCursor />}
     </>
   );
 }
