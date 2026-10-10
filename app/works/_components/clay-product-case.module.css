@@ -997,12 +997,61 @@
 
 @media (max-width: 1024px) {
   .readable { --case-body: 16px; --case-label: 12px; --case-tab: 14px; --case-heading: 22px; }
+  .page.readable .resultsCard h2 { font-size: 26px; }
 
-  .page.embedded { padding-top: 0; background: transparent; }
+  .page.embedded { min-height: 0; padding-top: 0; background: transparent; }
   .embedded::after,
   .embedded .texture,
   .embedded .topbar,
   .embedded > .footer { display: none; }
-  .embedded .showcase { padding-top: 72px; }
+  .embedded .showcase { padding-top: 12px; }
   .page.readable .caseRail { min-height: 0; grid-template-rows: repeat(4, auto); }
+}
+
+/* Keep device previews and chapter controls inside the mobile reading column. */
+@media (min-width: 721px) and (max-width: 780px) {
+  .dualCluster { transform: translate(-50%, -50%) scale(.68); }
+}
+
+@media (max-width: 720px) {
+  .page { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+  .showcase { gap: 24px; padding-top: 24px; }
+  .page.readable .caseRail { gap: 16px; }
+  .railHeader h1 { font-size: clamp(28px, 7.6vw, 36px); line-height: 1.08; }
+  .railTabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .page.readable .railTabs button { min-height: 68px; grid-template-columns: 1fr; grid-template-rows: auto 1fr; gap: 6px; }
+  .page.readable .railTabs button strong { align-self: center; }
+  .page.readable .railPurpose { margin-top: 14px; font-size: 15px; line-height: 1.6; }
+  .page.readable .proofList { padding-right: 0; }
+  .railEvidence dd,
+  .metrics dd { overflow-wrap: anywhere; }
+  .dualPage .productStage { height: 450px; }
+  .dualCluster { top: calc(50% + 24px); transform: translate(-50%, -50%) scale(.56); }
+  .clayHalo { width: min(80vw, 360px); }
+  .liveToggle,
+  .phoneStage .liveToggle { left: 4%; }
+  .productMarker { right: 4%; }
+  .footer { gap: 10px; }
+}
+
+@media (max-width: 600px) {
+  .dualPage .productStage { height: 390px; }
+  .dualCluster { transform: translate(-50%, -50%) scale(.44); }
+}
+
+@media (max-width: 480px) {
+  .dualPage .productStage { height: 340px; }
+  .dualCluster { transform: translate(-50%, -50%) scale(.36); }
+}
+
+@media (max-width: 380px) {
+  .dualCluster { transform: translate(-50%, -50%) scale(.31); }
+  .page.readable .railTabs button { padding-inline: 6px; }
+  .page.readable .railTabs button strong { font-size: 13px; }
+}
+
+@media (max-width: 340px) {
+  .dualPage .productStage { height: 310px; }
+  .dualCluster { transform: translate(-50%, -50%) scale(.28); }
+  .singlePhoneScale { transform: translate(-50%, -50%) scale(.62); }
 }

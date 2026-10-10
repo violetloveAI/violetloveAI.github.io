@@ -40,6 +40,79 @@ export function WorkPreview({ project, instant }: WorkPreviewProps) {
     return () => window.clearTimeout(timer);
   }, [state.leaving, instant]);
 
+  useEffect(() => {
+    const stage = stageRef.current;
+    const visibleKey = state.visible?.key;
+    if (!stage || visibleKey === undefined) return;
+    const frame = stage.querySelector<HTMLIFrameElement>(`iframe[data-frame-key="${visibleKey}"]`);
+    if (!frame) return;
+
+    const mobile = window.matchMedia('(max-width: 1024px)');
+    let observer: ResizeObserver | undefined;
+    let animationFrame = 0;
+    let disposed = false;
+
+    function measure() {
+      animationFrame = 0;
+      if (disposed || !mobile.matches) return;
+      try {
+        const doc = frame!.contentDocument;
+        if (!doc?.body) return;
+        // Measure at a stable viewport height first. Otherwise a case's 100svh
+        // minimum could keep an old, taller measurement after its content shrinks.
+        frame!.style.height = `${Math.max(360, Math.min(window.innerHeight * .7, 620))}px`;
+        let height = Math.ceil(Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight));
+        stage!.style.setProperty('--work-preview-mobile-height', `${height}px`);
+        frame!.style.removeProperty('height');
+        // A few case details use clamped viewport units. Let those reach their
+        // final size after expansion without leaving a small inner scrollbar.
+        for (let pass = 0; pass < 3; pass += 1) {
+          const expandedHeight = Math.ceil(Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight));
+          if (expandedHeight <= height) break;
+          height = expandedHeight;
+          stage!.style.setProperty('--work-preview-mobile-height', `${height}px`);
+        }
+      } catch { /* Keep the regular viewport if an iframe navigates off-origin. */ }
+      finally { frame!.style.removeProperty('height'); }
+    }
+
+    function scheduleMeasure() {
+      if (!disposed && !animationFrame) animationFrame = window.requestAnimationFrame(measure);
+    }
+
+    function observeDocument() {
+      observer?.disconnect();
+      stage!.style.removeProperty('--work-preview-mobile-height');
+      if (!mobile.matches || disposed) return;
+      try {
+        const doc = frame!.contentDocument;
+        if (!doc?.body) return;
+        observer = new ResizeObserver(scheduleMeasure);
+        observer.observe(doc.body);
+        observer.observe(doc.documentElement);
+        // Content changes can occur inside a body whose minimum height stays fixed.
+        for (const child of doc.body.children) observer.observe(child);
+        for (const content of doc.querySelectorAll('main, main > section')) observer.observe(content);
+        void doc.fonts.ready.then(scheduleMeasure);
+        scheduleMeasure();
+      } catch { /* External navigation keeps its own document and scrolling. */ }
+    }
+
+    observeDocument();
+    mobile.addEventListener('change', observeDocument);
+    frame.addEventListener('load', observeDocument);
+    window.addEventListener('resize', scheduleMeasure);
+    return () => {
+      disposed = true;
+      observer?.disconnect();
+      window.cancelAnimationFrame(animationFrame);
+      mobile.removeEventListener('change', observeDocument);
+      frame.removeEventListener('load', observeDocument);
+      window.removeEventListener('resize', scheduleMeasure);
+      stage.style.removeProperty('--work-preview-mobile-height');
+    };
+  }, [state.visible?.key]);
+
   const loading = Boolean(state.pending);
   const shownProject = state.visible?.project ?? project;
   const frames = [state.leaving, state.visible, state.pending].filter((frame) => frame !== null);

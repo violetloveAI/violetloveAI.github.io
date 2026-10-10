@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react';
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react';
 import Image from 'next/image';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -36,7 +36,7 @@ const contactEntries = [
 ] as const;
 
 const downloads = [
-  { name: '一页中文简历', meta: '快速了解 · 1 PAGE', image: '/assets/cartoon-clay-v2/resume-buttons/01-one-page-chinese-resume.webp', href: null, filename: null },
+  { name: '一页中文简历', meta: '快速了解 · 1 PAGE', image: '/assets/cartoon-clay-v2/resume-buttons/01-one-page-chinese-resume.webp', href: '/downloads/xie-zihan-fde-resume-one-page.pdf', filename: '谢子涵_FDE一页中文简历_20261009.pdf' },
   { name: 'FDE 项目作品集', meta: '项目证据 · CASEBOOK', image: '/assets/cartoon-clay-v2/resume-buttons/03-fde-project-portfolio.webp', href: '/downloads/xie-zihan-fde-portfolio.pdf', filename: '谢子涵_FDE个人作品集.pdf' },
 ] as const;
 
@@ -466,7 +466,7 @@ export default function Home() {
   useEffect(() => {
     const refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh());
     return () => window.cancelAnimationFrame(refreshFrame);
-  }, [activeLife]);
+  }, [activeLife, activeEducation, activeEducationSchool, activeCareer, activeContact]);
 
   useEffect(() => {
     const career = pageRef.current?.querySelector<HTMLElement>('#career');
@@ -698,53 +698,55 @@ export default function Home() {
   }, { dependencies: [activeEducation, activeEducationSchool], scope: pageRef, revertOnUpdate: true });
 
   useGSAP(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const media = gsap.matchMedia();
+    media.add('(min-width: 801px) and (prefers-reduced-motion: no-preference)', () => {
+      const chapters = gsap.utils.toArray<HTMLElement>(
+        '.work-canvas-v2, .career-canvas-v2, .education-canvas, .life-canvas-v2, .contact-canvas-v2',
+      );
 
-    const chapters = gsap.utils.toArray<HTMLElement>(
-      '.work-canvas-v2, .career-canvas-v2, .education-canvas, .life-canvas-v2, .contact-canvas-v2',
-    );
-
-    chapters.forEach((chapter) => {
-      const content = Array.from(chapter.children).filter((child): child is HTMLElement => (
-        child instanceof HTMLElement
-        && !child.matches('.life-ambient-light, .life-light-scrim')
-      ));
-      gsap.fromTo(
-        content,
-        { y: 14, autoAlpha: 0.76 },
-        {
-          y: 0,
-          autoAlpha: 1,
+      chapters.forEach((chapter) => {
+        const content = Array.from(chapter.children).filter((child): child is HTMLElement => (
+          child instanceof HTMLElement
+          && !child.matches('.life-ambient-light, .life-light-scrim, .chapter-nameplate')
+        ));
+        gsap.fromTo(
+          content,
+          { y: 14, autoAlpha: 0.76 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            stagger: 0.025,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: chapter,
+              start: 'top 94%',
+              end: 'top 36%',
+              scrub: 0.55,
+              invalidateOnRefresh: true,
+            },
+          },
+        );
+        const exitContent = content.filter((child) => (
+          !chapter.classList.contains('work-canvas-v2')
+          && !child.matches('header, [class*="hint"]')
+        ));
+        if (!exitContent.length) return;
+        gsap.to(exitContent, {
+          y: -14,
+          autoAlpha: 0,
           stagger: 0.025,
           ease: 'none',
           scrollTrigger: {
             trigger: chapter,
-            start: 'top 94%',
-            end: 'top 36%',
+            start: 'bottom 64%',
+            end: 'bottom 8%',
             scrub: 0.55,
             invalidateOnRefresh: true,
           },
-        },
-      );
-      const exitContent = content.filter((child) => (
-        !chapter.classList.contains('work-canvas-v2')
-        && !child.matches('header, [class*="hint"]')
-      ));
-      if (!exitContent.length) return;
-      gsap.to(exitContent, {
-        y: -14,
-        autoAlpha: 0,
-        stagger: 0.025,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: chapter,
-          start: 'bottom 64%',
-          end: 'bottom 8%',
-          scrub: 0.55,
-          invalidateOnRefresh: true,
-        },
+        });
       });
     });
+    return () => media.revert();
   }, { scope: pageRef });
 
   useGSAP(() => {
@@ -1147,6 +1149,10 @@ export default function Home() {
       <SensoryLayer />
       <LiquidCursor />
       <section className="story" id="top">
+        <nav className="mobile-entry-nav" aria-label="快速浏览作品集">
+          <a href="#work">查看作品 <span aria-hidden="true">↗</span></a>
+          <a href="#contact">联系与简历 <span aria-hidden="true">↓</span></a>
+        </nav>
         <div className="story-stage">
           <div className="story-night" aria-hidden="true" />
           <div className="stage-grid" aria-hidden="true" />
@@ -1354,7 +1360,7 @@ export default function Home() {
                               ? `切换到下一张${selectedCareerStory.label}图片；当前第 ${selectedCareerMediaIndex + 1} 张，共 ${selectedCareerGallery.items.length} 张`
                               : `${selectedCareerStory.label}图片，共 1 张`}
                           >
-                            <Image key={selectedCareerGalleryItem.src} src={selectedCareerGalleryItem.src} alt={selectedCareerGalleryItem.alt} fill sizes="(max-width: 800px) 100vw, 300px" loading="lazy" unoptimized />
+                            <Image key={selectedCareerGalleryItem.src} src={selectedCareerGalleryItem.src} alt={selectedCareerGalleryItem.alt} fill sizes="(max-width: 800px) 100vw, 300px" style={{ objectFit: 'cover' }} loading="lazy" unoptimized />
                           </button>
                           <span className="career-media-status" aria-hidden="true">
                             {selectedCareerMediaIndex + 1} / {selectedCareerGallery.items.length}{selectedCareerGallery.items.length > 1 ? ' · 点击图片切换' : ''}
@@ -1850,11 +1856,11 @@ export default function Home() {
           <div className="contact-focus-stage" id="contact-focus-stage" aria-live="polite">
             {downloadOpen ? (
               <div className="contact-inline-downloads" role="group" aria-label="简历下载选项">
-                {downloads.map((item) => item.href ? (
+                {downloads.map((item) => (
                   <a
                     className="resume-download-option"
                     href={item.href}
-                    download={item.filename ?? undefined}
+                    download={item.filename}
                     aria-label={`下载${item.name}，${item.meta}`}
                     key={item.name}
                   >
@@ -1862,19 +1868,6 @@ export default function Home() {
                     <span><strong>{item.name}</strong><small>{item.meta}</small></span>
                     <i>下载 PDF</i>
                   </a>
-                ) : (
-                  <button
-                    className="resume-download-option"
-                    type="button"
-                    disabled
-                    aria-disabled="true"
-                    aria-label={`${item.name}，${item.meta}，文件待补充`}
-                    key={item.name}
-                  >
-                    <Image src={item.image} width={2172} height={724} alt="" aria-hidden="true" loading="lazy" unoptimized />
-                    <span><strong>{item.name}</strong><small>{item.meta}</small></span>
-                    <i>待补充</i>
-                  </button>
                 ))}
               </div>
             ) : selectedContact ? (

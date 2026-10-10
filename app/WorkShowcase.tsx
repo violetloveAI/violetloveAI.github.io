@@ -81,13 +81,16 @@ export function WorkShowcase() {
       style={palette}
     >
       <h2 id="work-title" className="sr-only">AI 辅助构建作品展示</h2>
+      <header className={styles.mobileHeading} aria-hidden="true">
+        <p>AI 辅助构建</p>
+        <span>{workProjects.length} 个作品，点选查看</span>
+      </header>
       {selectedWork.id === 'jialihua' && (
         <div className={`chapter-nameplate ${styles.nameplate}`} aria-hidden="true">
           <Image src="/assets/cartoon-clay-v2/01-navigation/01-ai-assisted-building.webp" width={2043} height={770} alt="" sizes="(max-width: 800px) 76vw, 540px" loading="lazy" unoptimized />
         </div>
       )}
       <div className={`work-stage-v3 ${styles.stage}`} data-active-work={selectedWork.id}>
-        <WorkPreview project={selectedWork} instant={reduceMotion || input === 'keyboard'} />
         <div className={styles.dock}>
           <div className={styles.rail}>
             <Image
@@ -130,7 +133,7 @@ export function WorkShowcase() {
                     <span className={styles.sparkles} aria-hidden="true">
                       {Array.from({ length: 6 }, (_, sparkleIndex) => <i key={sparkleIndex} />)}
                     </span>
-                    <Image className={styles.art} src={project.image} alt="" fill sizes="(max-width: 1024px) 144px, 160px" unoptimized />
+                    <Image className={styles.art} src={project.image} alt="" fill sizes="(max-width: 600px) 23vw, (max-width: 1024px) 13vw, 160px" unoptimized />
                     <span className={styles.label}>{project.title}</span>
                   </button>
                 );
@@ -140,9 +143,10 @@ export function WorkShowcase() {
         </div>
         <footer className={`work-controls-v3 ${styles.controls}`}>
           <div className="work-counter-v3" aria-hidden="true"><strong>{selectedWork.index}</strong><span>/ {String(workProjects.length).padStart(2, '0')}</span></div>
-          <p>左右滑动藤蔓，选择作品</p>
-          <a href={selectedWork.caseHref}>{selectedWork.caseLabel}<span aria-hidden="true">→</span></a>
+          <p>{selectedWork.title}<span className={styles.selectedDescription}>{selectedWork.eyebrow}</span></p>
+          <a href={selectedWork.caseHref} aria-label={`${selectedWork.title}：${selectedWork.caseLabel}`}>{selectedWork.caseLabel}<span aria-hidden="true">→</span></a>
         </footer>
+        <WorkPreview project={selectedWork} instant={reduceMotion || input === 'keyboard'} />
       </div>
       <p className="sr-only" aria-live="polite">正在展示：{selectedWork.title}。可用左右方向键、Home 与 End 切换作品。</p>
     </section>

@@ -11,6 +11,7 @@ import {
 import './globals.css';
 import './v2.css';
 import './work-interactions.css';
+import './mobile-page.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

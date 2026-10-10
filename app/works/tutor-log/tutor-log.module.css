@@ -561,15 +561,34 @@
 
 @media (max-width: 1024px) {
   .readable { --case-body: 16px; --case-label: 12px; --case-tab: 14px; --case-heading: 22px; }
+  .page.readable .resultsCard h2 { font-size: 26px; }
   .page.readable .summary { font-size: 16px; }
   .designHighlights { gap: 13px; }
   .designHighlights strong { font-size: 16px; }
   .designHighlights p { font-size: 14px; }
 
-  .page.embedded { padding-top: 0; background: transparent; }
+  .page.embedded { min-height: 0; padding-top: 0; background: transparent; }
   .embedded::after,
   .embedded .texture,
   .embedded .topbar,
   .embedded > .footer { display: none; }
-  .embedded .showcase { padding-top: 72px; }
+  .embedded .showcase { padding-top: 12px; }
+}
+
+@media (max-width: 680px) {
+  .page { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+  .showcase { gap: 24px; padding-top: 24px; }
+  .page.readable .proofList { padding-right: 0; }
+  .phoneGlow { width: min(80vw, 340px); }
+  .liveToggle { left: 4%; }
+  .productMarker { right: 4%; }
+  .footer { gap: 10px; }
+}
+
+@media (max-width: 340px) {
+  .productStage { --phone-scale: .64; height: 650px; }
+  .liveToggle { min-width: 164px; gap: 6px; }
+  .liveToggle span { min-width: 86px; }
+  .liveToggle strong { font-size: 18px; }
+  .liveToggle small { font-size: 12px; }
 }

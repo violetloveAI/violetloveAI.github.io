@@ -177,12 +177,12 @@
   .proofList span { font-size: 12px; }
   .pager button { width: 44px; }
   .footer { height: 48px; }
-  .page.embedded { padding-top: 0; background: transparent; }
+  .page.embedded { min-height: 0; padding-top: 0; background: transparent; }
   .embedded::after,
   .embedded .texture,
   .embedded .topbar,
   .embedded > .footer { display: none; }
-  .embedded .showcase { padding-top: 72px; }
+  .embedded .showcase { padding-top: 12px; }
 }
 
 @media (max-width: 680px) {
